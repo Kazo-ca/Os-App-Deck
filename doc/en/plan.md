@@ -252,6 +252,52 @@ receives the `kazo/v0.18.1` branch. Benoit merges `deck/base` into `main`.
   comes out of the app, an export never overwrites a file without asking, and the OS shortcuts
   work with the cursor in the slide.
 
+- **Done on 2026-11-14** (PR to `deck/base`). What is built:
+  - `Documents/DeckDocuments.cs` around the module's `DocumentSession`: list of presentations
+    read from `ui.inspect` (`DeckDocumentList`, the place in the list is the index `window.next`
+    takes) with the one in front from `document.inspect`; title `*name — Kazo Deck`; "untouched
+    blank presentation" (Q1 = A: a file opened from it replaces it, otherwise it opens in a new
+    window; a file already open in the window does nothing). An outline (`.txt .md .rtf`)
+    becomes an untitled presentation and binds nothing.
+  - Saving (decisions 6 and 7): `saveAs: true`, or the name of the presentation in front when it
+    is bound, is a save; any other `save` is a **copy** (export, print to PDF): the dialog always
+    asks, the binding stays. An export in the format of an earlier file of the presentation
+    (`Plan.pptx` after a Save As to `Plan.deckcraft`) is therefore a copy, never a rewrite. A
+    cancelled dialog or a refused write leaves the window modified, with a message, and the next
+    save asks for a path again.
+  - Exports of several files (`CopySeries`): "Export › every slide as pictures" sends
+    `<title>1.png`, `<title>2.png`… one after the other. The first file asks where to go, the
+    next ones follow it into the same folder under DeckCraft's names (within 5 s of the previous
+    copy); a file that already exists asks again. Form chosen while waiting for Benoit's answer
+    (question asked in the thread).
+  - Close guard (decision 9): Yes / No / Cancel; Yes saves each modified presentation in turn
+    (`window.next { index }` then `file.save`), waiting for each write; a cancelled dialog keeps
+    the window open.
+  - OS dialogs for Open (Presentations filter), pictures, sounds and videos; `Ctrl+N` reserved,
+    opens a new window; theme followed live (`ui.set { dark }`); the OS user's name passed as
+    `?author=` (author of comments).
+  - Shortcut conflict found: `Alt+F9` (View › Guides in DeckCraft) is an OS chord and does not
+    reach DeckCraft; the menu remains. No other conflict seen in `ReservedKeys.Os`.
+- Checked:
+  - `dotnet test -c Release`: 92 tests green (list of presentations, copy series, save and copy
+    decisions, title, `Ctrl+N`, parameters).
+  - `npm run test:e2e` (Release, Chromium without a graphics card): 9 runs green, 6 of them new
+    (`tests/e2e/open-save.e2e.mjs`): new presentation saved, rewritten then reopened by
+    double-click; Save As, print to PDF and export of every slide as pictures with a single
+    dialog; close guard (Cancel, Yes then cancelled dialog, Yes with a name); File › Open in the
+    blank window then in a new window, and the same file doing nothing; `Ctrl+N`; `.pptx` export,
+    opened by double-click, saved in place, closed by `Alt+Q` with no dialog and reopened.
+
+  | Measure (Chromium without a graphics card, local server) | Value |
+  | --- | --- |
+  | 12.8 MB `.pptx` (8 slides, 3 PNG pictures of 4.2 MB, a sound, a video) | opened by double-click in **11.0 s** (window launch, DeckCraft start, read and open included) |
+  | Save in place after a change | **165 ms** |
+  | Memory | about +144 MiB for the window and the file (all Chromium processes, rough measure) |
+  | Inserted sound and video | `insert.audio` and `insert.video` answer `playable: true`, `media.play` answers ok and the video shows its playback bar (at 00:03.02 in the screenshot); the sound and picture **actually rendered are not checked** without speakers or GPU (decoding in the `.wasm`) |
+
+  The file is 12.8 MB, not the few tens planned (DeckCraft's limit: 128 MiB per file): measures
+  to redo with a bigger file, on a machine with a GPU.
+
 ### 4. Slide show (`deck/4-slide-show`)
 
 - According to Q2: a page script (`wwwroot/host/`, a file of the app, no inline script) that
@@ -296,7 +342,7 @@ reach); Benoit looks before publishing.
 - [x] Plan in fr and en.
 - [x] Benoit's answers to Q1, Q2 and Q3: A everywhere (2026-11-14).
 - [x] Work item 2: solution, manifest, build from the fork, iframe page, window (2026-11-14).
-- [ ] Work item 3: window, opening, saving, copies, close guard.
+- [x] Work item 3: window, opening, saving, copies, close guard (2026-11-14).
 - [ ] Work item 4: slide show.
 - [ ] Work item 5: Store.
 - [ ] Release: `deck/base` into `main` (Benoit), `v0.1.0` tag, catalog, `features.md`.

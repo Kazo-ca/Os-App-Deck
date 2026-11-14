@@ -16,11 +16,13 @@ namespace Kazo.Deck;
 /// </summary>
 /// <remarks>
 /// "Ready" is DeckCraft's <c>deckcraft:ready</c> event (its host mode, <c>craft-web-host</c>). Once
-/// DeckCraft is ready the window gives it the OS theme (decision 10); there is no language to give,
-/// DeckCraft is in English only. Opening, saving, copies, the binding of presentations to their
-/// files, the close guard, the file picker and <c>Ctrl+N</c> come with work item 3; the slide show
-/// in full screen and the presenter view with work item 4. The launch argument <c>--webgl</c> forces
-/// DeckCraft's WebGL 2 renderer, to try it without WebGPU.
+/// DeckCraft is ready the window gives it the OS theme (decision 10; there is no language to give,
+/// DeckCraft is in English only), then opens the file it was started for. Opening, saving, copies,
+/// the binding of presentations to their files and the close guard are in
+/// <c>DeckWindow.Documents.cs</c> (work item 3); the file pickers, the chords and the theme in
+/// <c>DeckWindow.Proxy.cs</c>. The slide show in full screen and the presenter view come with work
+/// item 4. The launch argument <c>--webgl</c> forces DeckCraft's WebGL 2 renderer, to try it
+/// without WebGPU.
 /// </remarks>
 public sealed partial class DeckWindow : IAsyncDisposable
 {
@@ -46,6 +48,8 @@ public sealed partial class DeckWindow : IAsyncDisposable
     {
         CancelTimeout();
         await StopFrameAsync();
+        _nextSave?.TrySetResult(false);
+        _saveGate.Dispose();
     }
 
     /// <inheritdoc />
@@ -53,7 +57,7 @@ public sealed partial class DeckWindow : IAsyncDisposable
     protected override async Task OnAppInitializedAsync()
     {
         _request = OpenRequest.FromArguments(LaunchArguments);
-        await SetWindowTitleAsync($"{L["Untitled"]} — Kazo Deck");
+        await SetWindowTitleAsync(DocumentTitle);
     }
 
     /// <inheritdoc />
@@ -66,12 +70,17 @@ public sealed partial class DeckWindow : IAsyncDisposable
     }
 
     /// <inheritdoc />
-    /// <remarks>The window came to the front: the keyboard goes to DeckCraft.</remarks>
+    /// <remarks>
+    /// The window came to the front: the keyboard goes to DeckCraft, and the title follows the
+    /// presentation in front, which DeckCraft may have changed (Window › Next Window).
+    /// </remarks>
     protected override async Task OnWindowActivatedAsync()
     {
-        if (_frame is not null && _startup.State == FrameState.Running)
+        if (_frame is { } frame && _startup.State == FrameState.Running)
         {
-            await _frame.FocusAsync();
+            await frame.FocusAsync();
+            await RefreshDocumentsAsync(frame);
+            await UpdateTitleAsync();
         }
     }
 
@@ -80,7 +89,10 @@ public sealed partial class DeckWindow : IAsyncDisposable
         CraftFrame frame = new(JavaScript);
         frame.Ready += OnReadyAsync;
         frame.Failed += OnFailedAsync;
-        frame.SchemeChanged += OnSchemeChangedAsync;
+        frame.DirtyChanged += OnDirtyChangedAsync;
+        frame.Saving += OnSavingAsync;
+        frame.Exporting += OnExportingAsync;
+        ConnectProxy(frame, connect: true);
         _frame = frame;
         ArmTimeout(_startup.Attempt);
 
@@ -94,13 +106,13 @@ public sealed partial class DeckWindow : IAsyncDisposable
         }
     }
 
-    // DeckCraft's page, the WebGL 2 switch and the chords the OS keeps (decision 12). Ctrl+N, a new
-    // window with Q1 = A, is added with work item 3, together with the window that opens it.
+    // DeckCraft's page, the user's name for comments, the WebGL 2 switch, and the chords the
+    // window keeps: the OS's and Ctrl+N, a new window (decision 12, Q1 = A).
     private CraftFrameOptions FrameOptions() =>
         new(CraftFrameOptions.PagePathOf(typeof(DeckWindow).Assembly.GetName().Name!), L["EditorLabel"])
         {
-            Parameters = DeckCraftParameters.For(_request.WebGl),
-            ReservedKeys = ReservedKeys.Os,
+            Parameters = DeckCraftParameters.For(_request.WebGl, AppContext.UserDisplayName),
+            ReservedKeys = DeckKeys.All,
         };
 
     private async Task StopFrameAsync()
@@ -112,7 +124,10 @@ public sealed partial class DeckWindow : IAsyncDisposable
 
         _frame.Ready -= OnReadyAsync;
         _frame.Failed -= OnFailedAsync;
-        _frame.SchemeChanged -= OnSchemeChangedAsync;
+        _frame.DirtyChanged -= OnDirtyChangedAsync;
+        _frame.Saving -= OnSavingAsync;
+        _frame.Exporting -= OnExportingAsync;
+        ConnectProxy(_frame, connect: false);
         await _frame.DisposeAsync();
         _frame = null;
     }
@@ -142,16 +157,25 @@ public sealed partial class DeckWindow : IAsyncDisposable
 
         await OnSchemeChangedAsync(await frame.GetColorSchemeAsync());
 
-        // DeckCraft starts on an empty presentation ("Presentation1"). Work item 3 sends the
-        // requested file instead when there is one.
-        if (IsWindowActive)
+        // DeckCraft starts on an empty presentation ("Presentation1"); the file the window was
+        // started for takes its place.
+        await PrepareDocumentAsync();
+        if (_frame is { } ready && IsWindowActive)
         {
-            await frame.FocusAsync();
+            await ready.FocusAsync();
         }
     }
 
     private async Task OnFailedAsync(string? error)
     {
+        if (_startup.State == FrameState.Running)
+        {
+            // Once running, DeckCraft also reports a file it refused (2 GiB or more) as `failed`:
+            // the app is still there, so that is a message, not the error screen.
+            await ShowNoticeAsync(error ?? string.Empty, error: true);
+            return;
+        }
+
         if (_startup.OnFailed(error))
         {
             CancelTimeout();
@@ -159,15 +183,11 @@ public sealed partial class DeckWindow : IAsyncDisposable
         }
     }
 
-    // DeckCraft follows the OS theme (decision 10): dark for the dark scheme, light for the light
-    // one. DeckCraft keeps no preference, so the theme is given again at every start.
-    private async Task OnSchemeChangedAsync(string scheme)
-    {
-        if (_frame is { } frame)
-        {
-            await frame.RequestAsync("ui.set", new { dark = DeckCraftTheme.IsDark(scheme) }, cancellationToken: AppContext.CancellationToken);
-        }
-    }
+    private Task<FrameCommandResult> ExecuteAsync(CraftFrame frame, string command, object parameters, CancellationToken cancellationToken = default) =>
+        frame.RequestAsync(
+            "engine.execute",
+            new { command, @params = parameters },
+            cancellationToken: cancellationToken == default ? AppContext.CancellationToken : cancellationToken);
 
     // Shows the error screen if attempt `attempt` gets no answer in time.
     private void ArmTimeout(int attempt)
