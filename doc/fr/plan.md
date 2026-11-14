@@ -268,6 +268,38 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
   vérifier que DeckCraft ne laisse pas de bouton « Open presenter window » à l'écran.
 - **Terminé quand** : un diaporama lancé d'un clic passe en plein écran et en sort proprement,
   et rien ne s'ouvre en dehors de Kazo OS (ou selon les réponses à Q2 et Q3).
+- **Fait le 2026-11-14** (PR vers `deck/base`). Q2 = A et Q3 = A, sans changer Kazo OS ni
+  DeckCraft :
+  - `wwwroot/host/slide-show.js` (module chargé par la page de l'iframe, commenté) : après chaque
+    touche ou clic **vrais** de la page (pas les évènements rejoués), trois questions
+    `uiInspect().showing` à 60, 200 et 450 ms ; un diaporama qui vient de démarrer passe le canevas
+    en plein écran (`requestFullscreen`), une fois par diaporama, tant que le geste le permet. La
+    sortie du plein écran (Échap, ou le navigateur) envoie `show.end` ; un diaporama qui finit seul
+    (après la dernière diapositive) quitte le plein écran. Refusé : le diaporama remplit la
+    fenêtre. Hors diaporama, **aucune minuterie** : seulement ces trois questions après un geste
+    (chacune coûte une image de DeckCraft) ; pendant le diaporama, une question toutes les 500 ms
+    pour voir sa fin. L'état est écrit sur `<html data-deck-show>` (`full-screen`, `window`).
+  - Mode présentateur : la fenêtre envoie `engine.execute { command: "show.presenter",
+    params: { on: false } }` à `ready` (`DeckCraftShow`; `show.presenter` seul n'est pas une
+    méthode de contrôle) ; le script le recoupe s'il le voit allumé (bouton « Presenter View » de
+    l'onglet Diaporama) et refuse `window.open` **pour l'adresse du présentateur seulement**
+    (`#deckcraft-presenter=`), les liens des diapositives s'ouvrent toujours ; `deck-page.css`
+    cache le bouton « Open presenter window » que DeckCraft pose sur `body` si un diaporama démarre
+    quand même avec le présentateur allumé. Les notes restent visibles en mode Normal.
+  - Vérifié : `dotnet build -c Release` et `dotnet test -c Release` (42 tests verts, dont la page
+    qui charge le script et la feuille, la commande du présentateur) ; `npm run test:unit`
+    (10 tests du script sur une page simulée : plein écran, Échap, fin seule, refus, une seule
+    rafale par geste, évènements rejoués ignorés, aucune minuterie hors diaporama) ;
+    `npm run test:e2e` (hôte en Release, Chromium sans carte graphique, WebGL 2) : `F5` passe en
+    plein écran sans recharger la page, Échap termine le diaporama et le focus reste dans la fenêtre
+    Kazo (`F5` relance) ; `Maj+F5` part de la diapositive courante ; le bouton « Present » ;
+    la fin après la dernière diapositive quitte le plein écran ; présentateur rallumé : aucune
+    fenêtre du navigateur, aucun bouton visible, recoupé ; un diaporama lancé sans geste remplit la
+    fenêtre puis passe en plein écran au clic suivant.
+  - **Non vérifié** : `?show` tel quel (la fenêtre ne le met jamais ; le cas « diaporama lancé sans
+    geste » le couvre) ; Échap réel du navigateur en plein écran (Chromium sans affichage garde la
+    touche : le parcours sort du plein écran par `exitFullscreen`, ce que fait le navigateur) ;
+    Firefox et Safari (délai du geste plus court sous Safari) ; le rendu WebGPU.
 
 ### 5. Store (`deck/5-store`)
 
@@ -303,6 +335,6 @@ la session) ; Benoit regarde avant de publier.
 - [x] Réponses de Benoit à Q1, Q2 et Q3 : A partout (2026-11-14).
 - [x] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre (2026-11-14).
 - [ ] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture.
-- [ ] Chantier 4 : diaporama.
+- [x] Chantier 4 : diaporama en plein écran, mode présentateur coupé (2026-11-14).
 - [ ] Chantier 5 : Store.
 - [ ] Sortie : `deck/base` dans `main` (Benoit), étiquette `v0.1.0`, catalogue, `features.md`.

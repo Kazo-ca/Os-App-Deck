@@ -262,6 +262,37 @@ receives the `kazo/v0.18.1` branch. Benoit merges `deck/base` into `main`.
   page; check that DeckCraft leaves no "Open presenter window" button on screen.
 - **Done when**: a show started with a click goes to full screen and leaves it cleanly, and
   nothing opens outside Kazo OS (or according to the answers to Q2 and Q3).
+- **Done on 2026-11-14** (PR to `deck/base`). Q2 = A and Q3 = A, with no change to Kazo OS or
+  DeckCraft:
+  - `wwwroot/host/slide-show.js` (a module loaded by the iframe page, commented): after each
+    **real** key press or click in the page (not replayed events), three `uiInspect().showing`
+    questions at 60, 200 and 450 ms; a show that just started gets the canvas in full screen
+    (`requestFullscreen`), once per show, while the gesture allows it. Leaving full screen (Esc, or
+    the browser) sends `show.end`; a show that ends by itself (after the last slide) leaves full
+    screen. Refused: the show fills the window. Outside a show, **no timer**: only these three
+    questions after a gesture (each costs one DeckCraft frame); during a show, one question every
+    500 ms to see it end. The state is written on `<html data-deck-show>` (`full-screen`, `window`).
+  - Presenter view: the window sends `engine.execute { command: "show.presenter",
+    params: { on: false } }` at `ready` (`DeckCraftShow`; `show.presenter` alone is not a control
+    method); the script turns it off again when it sees it on (the Slide Show tab's "Presenter
+    View" button) and refuses `window.open` **for the presenter's address only**
+    (`#deckcraft-presenter=`), links in slides still open; `deck-page.css` hides the "Open
+    presenter window" button DeckCraft puts on `body` if a show still starts with the presenter on.
+    Notes stay visible in Normal view.
+  - Checked: `dotnet build -c Release` and `dotnet test -c Release` (42 green tests, including the
+    page loading the script and the style sheet, the presenter command); `npm run test:unit`
+    (10 tests of the script on a fake page: full screen, Esc, end by itself, refusal, one burst per
+    gesture, replayed events ignored, no timer outside a show); `npm run test:e2e` (host in
+    Release, Chromium without a graphics card, WebGL 2): `F5` goes to full screen without reloading
+    the page, Esc ends the show and the focus stays in the Kazo window (`F5` starts again);
+    `Shift+F5` starts from the current slide; the "Present" button; the end after the last slide
+    leaves full screen; presenter turned on again: no browser window, no visible button, turned off
+    again; a show started without a gesture fills the window, then goes to full screen on the next
+    click.
+  - **Not checked**: `?show` as such (the window never sets it; the "show started without a
+    gesture" case covers it); the browser's real Esc in full screen (headless Chromium keeps the
+    key: the run leaves full screen with `exitFullscreen`, as the browser does); Firefox and Safari
+    (shorter gesture delay in Safari); WebGPU rendering.
 
 ### 5. Store (`deck/5-store`)
 
@@ -297,6 +328,6 @@ reach); Benoit looks before publishing.
 - [x] Benoit's answers to Q1, Q2 and Q3: A everywhere (2026-11-14).
 - [x] Work item 2: solution, manifest, build from the fork, iframe page, window (2026-11-14).
 - [ ] Work item 3: window, opening, saving, copies, close guard.
-- [ ] Work item 4: slide show.
+- [x] Work item 4: slide show in full screen, presenter view off (2026-11-14).
 - [ ] Work item 5: Store.
 - [ ] Release: `deck/base` into `main` (Benoit), `v0.1.0` tag, catalog, `features.md`.
