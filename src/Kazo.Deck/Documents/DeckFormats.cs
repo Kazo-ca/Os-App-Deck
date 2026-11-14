@@ -44,6 +44,35 @@ public static class DeckFormats
     /// <summary>Gets the extensions the OS Open dialog proposes, in the order above.</summary>
     public static IReadOnlyList<string> OpenExtensions => Formats.OpenExtensions;
 
+    /// <summary>
+    /// Gets the extensions of the presentations DeckCraft keeps under their own name: a file sent with
+    /// one of them becomes the presentation's file, so its name is bound to the file (decision 8).
+    /// An outline (<c>.txt .md .rtf</c>) opens as a new untitled presentation instead.
+    /// </summary>
+    public static IReadOnlyList<string> PresentationExtensions { get; } = [".pptx", ".ppsx", ".potx", NativeExtension];
+
+    /// <summary>Gets the extensions of DeckCraft's File › Open picker, which the window answers itself.</summary>
+    public static IReadOnlyList<string> PresentationPickerExtensions { get; } = [".deckcraft", ".pptx", ".potx", ".ppsx"];
+
+    /// <summary>Whether a file name is a presentation DeckCraft keeps under that name.</summary>
+    /// <param name="name">A file name or path.</param>
+    /// <returns><see langword="true"/> for <c>.pptx .ppsx .potx .deckcraft</c>, in any case.</returns>
+    public static bool IsPresentation(string? name) =>
+        !string.IsNullOrEmpty(name)
+        && PresentationExtensions.Contains(CraftDocumentFormats.ExtensionOf(name).ToLowerInvariant(), StringComparer.Ordinal);
+
+    /// <summary>
+    /// Whether a picker DeckCraft opened is its File › Open (it accepts presentations), rather than
+    /// Insert › Picture, Audio or Video. Reuse Slides needs the desktop app and opens no picker on the web.
+    /// </summary>
+    /// <param name="request">The picker request the module relayed.</param>
+    /// <returns><see langword="true"/> for File › Open.</returns>
+    public static bool IsOpenPicker(PickRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return request.AcceptsAny(PresentationPickerExtensions);
+    }
+
     /// <summary>Gets the file associations of the manifest.</summary>
     public static IReadOnlyList<FileHandler> FileHandlers => Formats.FileHandlers;
 

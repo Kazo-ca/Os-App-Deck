@@ -21,4 +21,13 @@
             <button type="button" class="deck-retry" @onclick="RetryAsync">@L["Retry"]</button>
         </div>
     }
+
+    @if (_notice is not null)
+    {
+        @* Over DeckCraft, at the bottom right: a failed write, a cancelled save, a copy written. *@
+        <div class="deck-notice @(_noticeIsError ? "error" : string.Empty)" role="@(_noticeIsError ? "alert" : "status")">
+            <span class="deck-notice-text">@_notice</span>
+            <button type="button" class="deck-notice-close" aria-label="@L["Dismiss"]" @onclick="DismissNotice">×</button>
+        </div>
+    }
 </div>

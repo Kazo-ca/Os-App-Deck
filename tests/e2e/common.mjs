@@ -52,3 +52,89 @@ export const rendererOf = frame => frame.evaluate(() => {
     }
     return canvas.getContext('webgl2') ? 'webgl2' : null;
 });
+
+// The steps of a run that waits on the OS or on DeckCraft, once DeckCraft runs.
+export const STEP_TIMEOUT_MS = 30_000;
+export const HOME = '/home/neo';
+
+/** Saves a screenshot of the page when DECK_E2E_SHOTS names a folder. */
+export async function shot(page, name) {
+    if (process.env.DECK_E2E_SHOTS) {
+        await page.screenshot({ path: `${process.env.DECK_E2E_SHOTS}/${name}.png` });
+    }
+}
+
+/** One OS window by its id. */
+export const windowById = (page, id) => page.locator(`article[data-window-id="${id}"]`);
+
+/** Waits for `count` Kazo Deck windows to show DeckCraft; returns the id of the newest one. */
+export async function waitForWindow(page, count, known = []) {
+    try {
+        await page.locator('.deck-frame.running').nth(count - 1).waitFor({ timeout: START_TIMEOUT_MS });
+    } catch (error) {
+        await shot(page, `window-${count}`);
+        throw error;
+    }
+    const ids = await deckWindows(page).evaluateAll(nodes => nodes.map(node => node.getAttribute('data-window-id')));
+    if (ids.length !== count) {
+        throw new Error(`${ids.length} Kazo Deck windows instead of ${count}`);
+    }
+    return ids.find(id => !known.includes(id));
+}
+
+/** The DeckCraft frame of a window, by the window's id. */
+export async function frameOf(page, id) {
+    const handle = await windowById(page, id).locator('iframe.craft-frame-iframe').elementHandle();
+    return handle.contentFrame();
+}
+
+/** Runs a DeckCraft command (engine or interface), as its ribbon and menus do. */
+export const execute = (frame, command, params = {}) =>
+    frame.evaluate(([name, args]) => window.deckcraft.execute(name, args), [command, params]);
+
+/** DeckCraft's open presentations (ui.inspect documents: { title, dirty, path }). */
+export const documentsOf = async frame => (await frame.evaluate(() => window.deckcraft.uiInspect()))?.documents ?? [];
+
+/** Waits until DeckCraft's presentations match `check` (a function of the list). */
+export async function waitForDocuments(frame, check, description) {
+    const deadline = Date.now() + STEP_TIMEOUT_MS;
+    let last = [];
+    while (Date.now() < deadline) {
+        last = await documentsOf(frame).catch(error => [String(error)]);
+        if (check(last)) {
+            return last;
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    throw new Error(`DeckCraft's presentations are not ${description}: ${JSON.stringify(last)}`);
+}
+
+/** Adds a slide, so that the presentation in front has unsaved changes. */
+export async function modify(frame) {
+    await execute(frame, 'slide.new', {});
+    await waitForDocuments(frame, list => list.some(doc => doc.dirty), 'modified after slide.new');
+}
+
+/** Answers the OS save dialog with a file name (in the folder it opens in). */
+export async function answerSaveDialog(page, title, fileName) {
+    const dialog = page.locator('section.file-dialog', { hasText: title });
+    await dialog.waitFor({ state: 'visible', timeout: STEP_TIMEOUT_MS });
+    await dialog.getByLabel('File name').fill(fileName);
+    await dialog.getByRole('button', { name: 'Save' }).click();
+    await dialog.waitFor({ state: 'hidden', timeout: STEP_TIMEOUT_MS });
+}
+
+/** Waits for a window's title bar to read `text`; on failure, says what it reads and the window's notice. */
+export async function expectTitle(page, id, text) {
+    try {
+        await page.waitForFunction(
+            ([windowId, wanted]) => document.querySelector(`article[data-window-id="${windowId}"] header.window-chrome h2`)?.textContent?.trim() === wanted,
+            [id, text],
+            { timeout: STEP_TIMEOUT_MS });
+    } catch (error) {
+        const actual = await windowById(page, id).locator('header.window-chrome h2').first().textContent().catch(() => null);
+        const notice = await windowById(page, id).locator('.deck-notice').textContent().catch(() => null);
+        await shot(page, `title-${id}`);
+        throw new Error(`title "${actual}" instead of "${text}"; notice: ${notice}`, { cause: error });
+    }
+}

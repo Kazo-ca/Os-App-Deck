@@ -37,17 +37,45 @@ public sealed class HostingTests
     public void The_theme_goes_to_DeckCraft_with_ui_set_dark()
     {
         // Decision 10: ui.set { dark } at ready and at every scheme change; no language to send.
+        string proxy = File.ReadAllText(Path.Combine(RepositoryRoot(), "src", "Kazo.Deck", "DeckWindow.Proxy.cs"));
         string window = File.ReadAllText(Path.Combine(RepositoryRoot(), "src", "Kazo.Deck", "DeckWindow.razor.cs"));
-        Assert.Contains("\"ui.set\", new { dark = DeckCraftTheme.IsDark(scheme) }", window);
+        Assert.Contains("\"ui.set\", new { dark = DeckCraftTheme.IsDark(scheme) }", proxy);
+        Assert.Contains("await OnSchemeChangedAsync(await frame.GetColorSchemeAsync());", window);
         Assert.DoesNotContain("Language =", window);
     }
 
     [Fact]
-    public void The_window_reserves_the_OS_chords()
+    public void The_window_reserves_the_OS_chords_and_Ctrl_N()
     {
-        // Decision 12. Ctrl+N (a new window, Q1 = A) comes with work item 3.
+        // Decision 12 and Q1 = A: Ctrl+N opens a new window instead of a hidden presentation.
         string window = File.ReadAllText(Path.Combine(RepositoryRoot(), "src", "Kazo.Deck", "DeckWindow.razor.cs"));
-        Assert.Contains("ReservedKeys = ReservedKeys.Os,", window);
+        Assert.Contains("ReservedKeys = DeckKeys.All,", window);
+        Assert.Contains(ReservedKeys.NewWindow, DeckKeys.All);
+        Assert.All(ReservedKeys.Os, chord => Assert.Contains(chord, DeckKeys.All));
+    }
+
+    [Theory]
+    [InlineData("n", "KeyN", true, false, KeyAction.NewWindow)]
+    [InlineData("N", null, true, false, KeyAction.NewWindow)]
+    [InlineData(null, "KeyN", true, false, KeyAction.NewWindow)]
+    [InlineData("n", "KeyN", true, true, KeyAction.None)]
+    [InlineData("n", "KeyN", false, false, KeyAction.None)]
+    [InlineData("s", "KeyS", true, false, KeyAction.None)]
+    public void Ctrl_N_asks_for_a_new_window(string? key, string? code, bool ctrl, bool shift, KeyAction expected)
+    {
+        ReservedKey pressed = new(key, code, ctrl, Alt: false, shift, Meta: false, ReservedKeyTarget.App);
+
+        Assert.Equal(expected, DeckKeys.ActionOf(pressed));
+    }
+
+    [Fact]
+    public void The_user_name_signs_comments()
+    {
+        IReadOnlyDictionary<string, string> parameters = DeckCraftParameters.For(webGl: false, author: "  Neo  ");
+
+        Assert.Equal("Neo", Assert.Single(parameters).Value);
+        Assert.Empty(DeckCraftParameters.For(webGl: false, author: "   "));
+        Assert.Equal(["author", "webgl"], DeckCraftParameters.For(webGl: true, author: "Neo").Keys);
     }
 
     private static string RepositoryRoot()

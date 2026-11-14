@@ -257,6 +257,55 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
   aucun dialogue ni téléchargement du navigateur ne sort de l'app, un export n'écrase jamais un
   fichier sans le demander, et les raccourcis de l'OS marchent le curseur dans la diapositive.
 
+- **Fait le 2026-11-14** (PR vers `deck/base`). Ce qui est construit :
+  - `Documents/DeckDocuments.cs` autour du `DocumentSession` du module : liste des présentations
+    lue dans `ui.inspect` (`DeckDocumentList`, la place dans la liste sert d'index à
+    `window.next`) avec celle de devant d'après `document.inspect` ; titre `*nom — Kazo Deck` ;
+    « présentation vierge jamais touchée » (Q1 = A : un fichier ouvert depuis elle la remplace,
+    sinon il s'ouvre dans une nouvelle fenêtre ; un fichier déjà ouvert dans la fenêtre ne fait
+    rien). Un plan (`.txt .md .rtf`) devient une présentation sans nom et ne lie rien.
+  - Enregistrement (décisions 6 et 7) : `saveAs: true`, ou le nom de la présentation de devant
+    quand il est lié, est un enregistrement ; tout autre `save` est une **copie** (export,
+    impression en PDF) : le dialogue demande toujours, la liaison ne bouge pas. Un export au
+    même format qu'un ancien fichier de la présentation (`Plan.pptx` après un Enregistrer sous
+    `Plan.deckcraft`) est donc une copie, jamais une réécriture. Un dialogue annulé ou une
+    écriture refusée laisse la fenêtre modifiée, avec un message, et le prochain enregistrement
+    redemande un chemin.
+  - Exports à plusieurs fichiers (`CopySeries`) : « Exporter › toutes les diapositives en
+    images » envoie `<titre>1.png`, `<titre>2.png`… à la suite. Le premier fichier demande où
+    aller, les suivants le suivent dans le même dossier sous les noms de DeckCraft (pendant
+    5 s après la copie précédente) ; un fichier qui existe déjà redemande. Forme choisie par
+    Benoit le 2026-11-14 (plutôt qu'un dialogue par image ou un dossier choisi une fois).
+  - Garde de fermeture (décision 9) : Oui / Non / Annuler ; Oui enregistre chaque présentation
+    modifiée l'une après l'autre (`window.next { index }` puis `file.save`), en attendant
+    chaque écriture ; un dialogue annulé garde la fenêtre ouverte.
+  - Dialogues de l'OS pour Ouvrir (filtre Présentations), images, sons et vidéos ; `Ctrl+N`
+    réservé, ouvre une nouvelle fenêtre ; thème suivi en direct (`ui.set { dark }`) ; nom de
+    l'utilisateur de l'OS passé en `?author=` (auteur des commentaires).
+  - Conflit de raccourci relevé : `Alt+F9` (Affichage › Repères dans DeckCraft) est un accord de
+    l'OS et n'arrive pas à DeckCraft ; le menu reste. Aucun autre conflit vu dans
+    `ReservedKeys.Os`.
+- Vérifié :
+  - `dotnet test -c Release` : 92 tests verts (liste des présentations, séries de copies,
+    décisions d'enregistrement et de copie, titre, `Ctrl+N`, paramètres).
+  - `npm run test:e2e` (Release, Chromium sans carte graphique) : 9 parcours verts, dont 6
+    nouveaux (`tests/e2e/open-save.e2e.mjs`) : nouvelle présentation enregistrée, réécrite puis
+    rouverte par double-clic ; Enregistrer sous, impression en PDF et export de toutes les
+    diapositives en images avec un seul dialogue ; garde de fermeture (Annuler, Oui puis
+    dialogue annulé, Oui avec un nom) ; Fichier › Ouvrir dans la fenêtre vierge puis dans une
+    nouvelle fenêtre, et le même fichier qui ne fait rien ; `Ctrl+N` ; export `.pptx`, ouvert
+    par double-clic, enregistré sur place, fermé par `Alt+Q` sans dialogue et rouvert.
+
+  | Mesure (Chromium sans carte graphique, serveur local) | Valeur |
+  | --- | --- |
+  | `.pptx` de 12,8 Mo (8 diapositives, 3 images PNG de 4,2 Mo, un son, une vidéo) | ouvert par double-clic en **11,0 s** (lancement de la fenêtre, démarrage de DeckCraft, lecture et ouverture compris) |
+  | Enregistrement sur place après une modification | **165 ms** |
+  | Mémoire | +144 Mio environ pour la fenêtre et le fichier (tous les processus Chromium, mesure grossière) |
+  | Son et vidéo insérés | `insert.audio` et `insert.video` répondent `playable: true`, `media.play` répond ok et la vidéo montre sa barre de lecture (à 00:03.02 sur la capture) ; le son et l'image **réellement rendus ne sont pas vérifiés** sans haut-parleur ni GPU (décodage dans le `.wasm`) |
+
+  Le fichier fait 12,8 Mo, pas les quelques dizaines prévues (limite de DeckCraft : 128 Mio par
+  fichier) : mesures à refaire avec un fichier plus gros, sur une machine avec GPU.
+
 ### 4. Diaporama (`deck/4-slide-show`)
 
 - Selon Q2 : script de la page (`wwwroot/host/`, fichier propre à l'app, sans script en ligne)
@@ -334,7 +383,7 @@ la session) ; Benoit regarde avant de publier.
 - [x] Plan fr et en.
 - [x] Réponses de Benoit à Q1, Q2 et Q3 : A partout (2026-11-14).
 - [x] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre (2026-11-14).
-- [ ] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture.
+- [x] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture (2026-11-14).
 - [x] Chantier 4 : diaporama en plein écran, mode présentateur coupé (2026-11-14).
 - [ ] Chantier 5 : Store.
 - [ ] Sortie : `deck/base` dans `main` (Benoit), étiquette `v0.1.0`, catalogue, `features.md`.
