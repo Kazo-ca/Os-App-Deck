@@ -1,23 +1,114 @@
 > [English version](README.md)
 
+<!-- Fiche du Store : générée depuis store/ par .github/scripts/store-readme.mjs. Modifiez store/, puis lancez-le. -->
+
+<img src="store/icon.png" alt="" width="96" align="right">
+
 # Kazo Deck
 
-Un dépôt d'app Kazo OS, créé avec le modèle `kazoos-solution`.
+Un éditeur de présentations pour Kazo OS. Kazo Deck est basé sur
+[DeckCraft](https://github.com/storytold/deckcraft) de l'équipe ArtCraft, un éditeur de
+présentations libre écrit en Rust, qui tourne ici dans une fenêtre de Kazo OS.
 
-Ce dépôt accueillera **Kazo Deck**, l'app de présentations de Kazo OS (un portage de DeckCraft). Le plan est dans [`doc/fr/plan.md`](doc/fr/plan.md) ([index de la documentation](doc/fr/README.md)).
+## Faire des présentations
+
+- Masques et dispositions de diapositives, thèmes avec jeux de couleurs et de polices, sections,
+  commentaires, notes, en-têtes et pieds de page, taille de diapositive au choix.
+- Plus de 150 formes avec poignées d'ajustement, connecteurs, dessin libre, fusion de formes,
+  dégradés, ombres, lueurs et reflets.
+- Texte mis en forme dans la diapositive : polices, paragraphes, puces et numéros, colonnes,
+  ajustement automatique, liens.
+- Images, tableaux, graphiques, icônes, audio et vidéo.
+- Transitions (dont Morph), animations d'entrée, d'emphase, de sortie et trajectoires.
+- Modèles de départ pour commencer une présentation en quelques secondes.
+
+## Présenter
+
+- F5 lance le diaporama depuis le début, Maj+F5 depuis la diapositive en cours, et le bouton
+  « Present » aussi : la présentation passe en plein écran dans le navigateur. Échap, ou la fin
+  de la dernière diapositive, ramène à la fenêtre.
+- Si le navigateur refuse le plein écran, le diaporama remplit la fenêtre.
+
+## Vos fichiers Kazo OS
+
+- Double-cliquez sur un `.pptx`, un `.ppsx`, un `.potx` ou un `.deckcraft` dans l'Explorateur de
+  fichiers : il s'ouvre dans Kazo Deck. Les fichiers `.txt`, `.md` et `.rtf` le proposent dans
+  « Ouvrir avec » (un plan devient des diapositives).
+- Une présentation par fenêtre : ouvrir un autre fichier, ou Ctrl+N, ouvre une nouvelle fenêtre.
+- Enregistrer réécrit le fichier ouvert, au même format. Enregistrer sous, et le premier
+  enregistrement d'une nouvelle présentation, passent par le dialogue d'enregistrement de Kazo OS.
+- Exporter (PowerPoint, PDF, images, GIF animé, plan) passe par le dialogue « Enregistrer une
+  copie » de Kazo OS : la présentation reste liée à son fichier. Les images de toutes les
+  diapositives se rangent dans le dossier choisi pour la première. Rien ne part dans les
+  téléchargements du navigateur.
+- Fermer la fenêtre demande avant de perdre des modifications.
+- Kazo Deck suit le thème clair ou sombre de Kazo OS.
+
+## Limites connues
+
+- **DeckCraft est en alpha.** La plupart des présentations s'ouvrent et s'enregistrent bien, mais
+  gardez une copie des plus importantes.
+- L'interface de DeckCraft est en anglais.
+- Kazo OS ouvre les fichiers jusqu'à 128 Mio.
+- DeckCraft dans le navigateur n'intègre que deux polices : Inter et BIZ UDPGothic (japonais). Une
+  présentation écrite avec une autre police (Calibri, Arial, Lato…) s'affiche en Inter, et sa mise
+  en page peut bouger un peu ; le fichier garde ses polices. Le texte chinois, coréen, arabe, hébreu
+  ou thaï peut s'afficher en carrés.
+- Le mode présentateur (notes et diapositive suivante sur un autre écran) est coupé pour
+  l'instant.
+- La fenêtre reste sur l'écran où elle s'est ouverte : la passer sur un autre écran rechargerait
+  DeckCraft et perdrait la présentation ouverte.
+- DeckCraft dessine avec WebGPU ou WebGL 2 : un navigateur ou un ordinateur sans l'un ni l'autre
+  montre un écran d'erreur au lieu des diapositives.
+- Le téléchargement fait environ 15 Mo (environ 40 Mo une fois installé), et chaque fenêtre charge
+  sa propre copie de DeckCraft.
+- Demande Kazo OS 3.3.4 ou plus récent.
+
+## Licence
+
+Kazo Deck est un logiciel libre sous licence MIT. DeckCraft est sous licence MIT ou Apache-2.0 ;
+ses avis, les licences du matériel qu'il contient, et celles des polices (SIL Open Font License
+1.1) sont livrés avec l'app (voir `THIRD-PARTY-NOTICES-fr.md` dans le dépôt). Le nom et les logos
+ArtCraft sont des marques de l'équipe ArtCraft et ne sont pas utilisés par Kazo Deck.
+
+## Captures d'écran
+
+<p>
+  <img src="store/screenshots/1.png" alt="Kazo Deck, capture 1" height="240">
+  <img src="store/screenshots/2.png" alt="Kazo Deck, capture 2" height="240">
+  <img src="store/screenshots/3.png" alt="Kazo Deck, capture 3" height="240">
+</p>
+
+<!-- /Fiche du Store -->
+
+## Essayer
+
+[Ouvrir Kazo Deck dans Kazo OS](https://os.kazo.ca/?autolaunch=ca.kazo.deck) : le lien démarre Kazo OS, installe l'app depuis le Store officiel et l'ouvre.
+
+Ou ouvrez [Kazo OS](https://os.kazo.ca/) et installez Kazo Deck depuis le **Kazo OS Store** (catégorie Productivité), ou dans le Terminal de Kazo OS, en administrateur : `sudo kazopkg install Kazo-ca/Os-App-Deck`.
+
+## À propos de Kazo OS
+
+[Kazo OS](https://github.com/Kazo-ca/Os) est un système d'exploitation simulé qui tourne dans le navigateur, écrit en C# avec Blazor WebAssembly. Il offre un environnement complet pour développer et exécuter des applications : bureau et fenêtres, système de fichiers persistant, processus, shell POSIX, réseau simulé, le Kazo OS Store, et un SDK public (paquets NuGet) pour créer des apps comme celle-ci. Essayez-le sur <https://os.kazo.ca/> (PWA, fonctionne hors ligne).
+
+## Développement
+
+- Plan : [plan](doc/fr/plan.md) ([index de la documentation](doc/fr/README.md)). Les avis de DeckCraft et les licences du paquet : [THIRD-PARTY-NOTICES-fr.md](THIRD-PARTY-NOTICES-fr.md).
 
 | Dossier | Contenu |
 | --- | --- |
 | `src/Kazo.Deck` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
 | `src/Kazo.Deck.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
-| `tests/Kazo.Deck.Tests` | Les tests de l'app |
+| `tests/Kazo.Deck.Tests` | Les tests de l'app (xUnit) |
 | `external/KazoOs` | Le dépôt Kazo OS en sous-module git, sur un tag de release |
 | `external/deckcraft` | Les sources de DeckCraft : notre fork `Kazo-ca/deckcraft`, branche `kazo/v0.18.1` (l'étiquette amont `v0.18.1`, sans changement) |
 | `src/Kazo.Deck/wwwroot/deckcraft/` | Le build web de DeckCraft compilé depuis ce sous-module, avec sa provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
 | `tests/e2e/` | Les parcours Playwright dans l'hôte Kazo OS (`npm run test:e2e`) |
-| `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, `store.json` |
+| `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, captures, `store.json` ; le haut de ce README en est généré (`npm run store:readme`, vérifié en CI) |
+| `tests/installed/` | L'app telle que le Store l'installe, dans un Kazo OS publié : `kazopkg install` (ou le Store avec `--store`), un `.pptx` exporté, ouvert par double-clic, enregistré et présenté en plein écran, les captures du Store (`npm run test:installed`) |
+| `THIRD-PARTY-NOTICES-fr.md` | DeckCraft et ce qu'il intègre ; lié dans le paquet avec `LICENSE` (`wwwroot/legal/`, avec les fichiers dont parle le NOTICE de DeckCraft dans `wwwroot/legal/deckcraft/`) |
 
-## Premiers pas
+### Premiers pas
 
 ```bash
 # Un dépôt créé depuis le template GitHub a déjà le sous-module :
@@ -32,7 +123,7 @@ git -C external/KazoOs checkout v<version de Kazo OS>
 Ouvrez ensuite le `Kazo.Deck.slnx` dans Visual Studio ou Rider et démarrez `Kazo.Deck.Os`,
 ou lancez `dotnet run --project src/Kazo.Deck.Os`.
 
-## La version de Kazo OS
+### La version de Kazo OS
 
 `external/KazoOs/wasm2/KazoOs/build/Versions.props` est la version de Kazo OS de ce dépôt.
 Pour changer de version, placez le sous-module sur son tag et validez-le :
@@ -46,7 +137,7 @@ git add external/KazoOs
 Ne modifiez jamais le sous-module : on ne modifie pas l'OS depuis un dépôt d'app, et la CI refuse
 un sous-module modifié ou hors de son tag.
 
-## Deux profils de build
+### Deux profils de build
 
 | Profil | Kazo OS vient de | Usage |
 | --- | --- | --- |
@@ -55,7 +146,7 @@ un sous-module modifié ou hors de son tag.
 
 Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
 
-## Publier dans le Kazo OS Store
+### Publier dans le Kazo OS Store
 
 1. Remplissez `store/` (icône, descriptions courtes, descriptions, catégorie et étiquettes dans `store.json`).
 2. Changez `Version` dans la classe `[AppManifest]` de l'app et validez-la dans `main`, puis posez le
@@ -80,7 +171,7 @@ Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
 Le catalogue ne prend jamais de binaire de votre part : une fois votre pull request relue et
 fusionnée, sa CI compile l'app au commit du tag.
 
-## Publier sur la branche `kazoos-packages`
+### Publier sur la branche `kazoos-packages`
 
 Le même tag `v*` lance aussi **Publish the Kazo OS packages** : il fait le paquet de l'app et le
 pousse sur la branche `kazoos-packages` de ce dépôt, en gardant les versions déjà publiées. Les

@@ -213,7 +213,7 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
     affichée à `ready`, aucun écran restant, thème sombre de l'OS reçu par `ui.set { dark }`,
     une présentation vide ; deux fenêtres ensemble, chacune son instance (une diapositive ajoutée
     dans l'une ne change pas l'autre).
-  - `npm run test:installed` (`tests/installed/install-and-start.mjs`, neuf) : le `.kazoapp`
+  - `npm run test:installed` (`tests/installed/install-and-start.mjs`, neuf ; renommé `install-and-open.mjs` et étendu au chantier 5) : le `.kazoapp`
     s'installe par `sudo kazopkg install` dans le **Kazo OS 3.3.4 publié**
     (`kazoos-wasm-3.3.4.zip`), DeckCraft s'affiche en 4,9 s à la première fenêtre (téléchargement
     et compilation, serveur local), 1,3 s à la deuxième ; sans drapeau, DeckCraft s'est rabattu
@@ -362,6 +362,27 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
   dans `Kazo-ca/Os` (fr et en).
 - **Terminé quand** : Kazo Deck s'installe depuis le Store, ouvre un `.pptx` par double-clic,
   l'enregistre et le présente.
+- **Fait (2026-11-14), avant la sortie** : fiche, icône (rendue depuis `icons/app.svg`), trois
+  captures prises dans le Kazo OS 3.3.4 publié (le modèle de départ « Pitch » de DeckCraft, un
+  contenu propre), README refait sur la fiche, `THIRD-PARTY-NOTICES` liés dans le paquet avec les
+  fichiers dont parle le `NOTICE` de DeckCraft (`wwwroot/legal/deckcraft/`), `LegalFilesTests`.
+  `npm run test:installed` sur le Kazo OS 3.3.4 publié : `kazopkg install`, le modèle exporté en
+  `pitch.pptx` par « Enregistrer une copie », un double-clic dans l'Explorateur de fichiers l'ouvre
+  dans une nouvelle fenêtre, une diapositive ajoutée et enregistrée sur place sans dialogue, F5 en
+  plein écran, Échap ramène à la fenêtre, licences dans le paquet : PASS.
+- **Mesuré** (conteneur cloud, Chromium sans écran, WebGL 2 sur SwiftShader) : paquet de 15,4 Mo
+  (39,2 Mo décompressé, 55 fichiers) ; première fenêtre affichée 4,9 à 5,6 s après le lancement
+  (téléchargement et compilation), une deuxième en 1,4 s, une fenêtre sur un fichier depuis le
+  cache en 0,5 s ; le processus de rendu grossit d'environ 400 à 450 Mio avec la première fenêtre et
+  d'environ 30 Mio avec la deuxième.
+- **Constaté** : le build web de DeckCraft n'intègre qu'Inter et BIZ UDPGothic (les autres familles
+  de craft-fonts sont réservées au natif ; leurs textes OFL sont quand même livrés avec le build).
+  Une présentation dans une autre police s'affiche en Inter, avec un message de DeckCraft ; noté
+  dans les limites de la fiche.
+- Après la fusion de `deck/base` dans `main` par Benoit : « Tag a release » (`v0.1.0`), PR du
+  catalogue (le secret d'organisation `HACK_STORE_TOKEN` existe maintenant),
+  `npm run test:installed -- --store`, ligne de `features.md` dans `Kazo-ca/Os`, fermeture de
+  l'issue #1.
 
 ## Piste en amont
 
@@ -385,5 +406,5 @@ la session) ; Benoit regarde avant de publier.
 - [x] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre (2026-11-14).
 - [x] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture (2026-11-14).
 - [x] Chantier 4 : diaporama en plein écran, mode présentateur coupé (2026-11-14).
-- [ ] Chantier 5 : Store.
+- [x] Chantier 5 : fiche du Store, avis, parcours installé sur Kazo OS 3.3.4 (2026-11-14).
 - [ ] Sortie : `deck/base` dans `main` (Benoit), étiquette `v0.1.0`, catalogue, `features.md`.
