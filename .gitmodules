@@ -2,3 +2,8 @@
 	path = external/KazoOs
 	url = https://github.com/Kazo-ca/Os.git
 	shallow = true
+[submodule "external/deckcraft"]
+	path = external/deckcraft
+	url = https://github.com/Kazo-ca/deckcraft.git
+	branch = kazo/v0.18.1
+	shallow = true

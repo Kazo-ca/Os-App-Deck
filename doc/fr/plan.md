@@ -201,6 +201,42 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
 - **Terminé quand** : l'app démarre en WebGPU et en WebGL 2, deux fenêtres tournent ensemble, le
   `.kazoapp` s'installe dans le Kazo OS 3.3.4 publié ; taille du `.wasm` comparée au zip officiel,
   taille du paquet et mémoire par fenêtre notées ici.
+- **Fait le 2026-11-14** (PR vers `deck/base`). Fork : branche `kazo/v0.18.1` de
+  `Kazo-ca/deckcraft` sur `7cc73ab1`, sans autre changement ; sous-module `external/deckcraft`
+  dessus, sous-module `external/KazoOs` sur `v3.3.4`. Compilé par `tools/build-deckcraft.sh`
+  (rustc 1.97.0, Trunk 0.21.14, `craft-fonts` `37827ad`, `CRAFT_FONTS_REQUIRED`), le
+  `packaging/web/package.sh` de DeckCraft tel quel. Vérifié :
+  - `dotnet build -c Release` et `dotnet test -c Release` : 39 tests verts (dont « le commit de
+    `deckcraft.json` est celui du sous-module » et les tailles et SHA-256 de chaque fichier).
+  - `npm run test:e2e` (hôte `Kazo.Deck.Os` en Release, Chromium sans carte graphique) : 3 parcours
+    verts : la page de l'iframe sans paramètre `control` ; DeckCraft en WebGL 2 (`--webgl`), fenêtre
+    affichée à `ready`, aucun écran restant, thème sombre de l'OS reçu par `ui.set { dark }`,
+    une présentation vide ; deux fenêtres ensemble, chacune son instance (une diapositive ajoutée
+    dans l'une ne change pas l'autre).
+  - `npm run test:installed` (`tests/installed/install-and-start.mjs`, neuf) : le `.kazoapp`
+    s'installe par `sudo kazopkg install` dans le **Kazo OS 3.3.4 publié**
+    (`kazoos-wasm-3.3.4.zip`), DeckCraft s'affiche en 4,9 s à la première fenêtre (téléchargement
+    et compilation, serveur local), 1,3 s à la deuxième ; sans drapeau, DeckCraft s'est rabattu
+    seul sur WebGL 2 (pas de WebGPU dans ce Chromium).
+  - **Non vérifié** : le rendu **WebGPU** (le WebGPU logiciel de Chromium perd son appareil sans
+    carte graphique, comme pour Kazo Fig et Kazo Photo) ; à essayer sur une machine avec GPU.
+  - Les Debug (`KazoOsUseSource=true`) ne compilent pas dans ce conteneur (SDK .NET 10.0.115,
+    erreurs Razor dans `Kazo.Os.Apps.Browser` du sous-module) ; la CI et le Store utilisent le
+    profil Release, vert.
+
+  | Mesure | Valeur |
+  | --- | --- |
+  | `.wasm` compilé | **38 745 366 octets** (36,9 Mio ; gzip -9 : 15 254 992) |
+  | `.wasm` du zip officiel | 33 159 566 octets (31,6 Mio ; gzip -9 : 11 840 503) |
+  | Écart | **+5 585 800 octets (+16,8 %)** : les polices de `craft-fonts`. Inter normal et gras (832 068 octets) et BIZ UDPGothic (4 669 688 octets) font 5,50 Mo ; l'écart a la taille de ces polices et le zip officiel n'a aucune licence OFL : la release amont semble compilée sans `CRAFT_FONTS_DIR` (déduit, pas vérifié dans ses journaux). Le nôtre a les polices que la release promet. |
+  | Paquet `ca.kazo.deck-0.1.0.kazoapp` | 15 373 139 octets (14,7 Mio) ; 37,3 Mio décompressé, 43 fichiers |
+  | Mémoire par fenêtre | processus de rendu de Chromium (`ps`, rendu logiciel) : +347 Mio à la première fenêtre, +46 Mio à la deuxième ; la mémoire du processus GPU n'est pas comptée. Mesure grossière, à refaire sur une machine avec GPU. |
+
+  Notes pour la suite : `package.sh` copie la licence OFL de **toutes** les familles de
+  `craft-fonts` (30 fichiers `OFL-*.txt`), alors que le build web n'en intègre que deux ; elles
+  restent dans `wwwroot/deckcraft/` (rien de faux, quelques Ko de trop), le chantier 5 en tient
+  compte dans `THIRD-PARTY-NOTICES`. `Ctrl+N` (nouvelle fenêtre, Q1 = A) n'est pas encore réservé :
+  il vient avec la fenêtre du chantier 3.
 
 ### 3. Fenêtre (`deck/3-window`)
 
@@ -265,7 +301,7 @@ la session) ; Benoit regarde avant de publier.
 - [x] Étape 0 : lecture de DeckCraft 0.18.1 et essai du build web officiel en mode hébergé.
 - [x] Plan fr et en.
 - [x] Réponses de Benoit à Q1, Q2 et Q3 : A partout (2026-11-14).
-- [ ] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre.
+- [x] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre (2026-11-14).
 - [ ] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture.
 - [ ] Chantier 4 : diaporama.
 - [ ] Chantier 5 : Store.

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kazo Deck">
+  <!-- Original icon of Kazo Deck (MIT, this repository): a projection screen on a stand, showing
+       a slide with a title bar and a rising bar chart. -->
+  <defs>
+    <linearGradient id="slide" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f97316"/>
+      <stop offset="1" stop-color="#db2777"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="52" height="5" rx="2.5" fill="#334155"/>
+  <rect x="9" y="11" width="46" height="32" rx="3" fill="url(#slide)"/>
+  <rect x="14" y="16" width="22" height="4" rx="2" fill="#fff7ed" opacity="0.95"/>
+  <rect x="16" y="31" width="6" height="8" rx="1" fill="#fff7ed" opacity="0.8"/>
+  <rect x="26" y="27" width="6" height="12" rx="1" fill="#fff7ed" opacity="0.88"/>
+  <rect x="36" y="22" width="6" height="17" rx="1" fill="#fff7ed" opacity="0.95"/>
+  <path d="M32 43 L32 50 M32 50 L22 58 M32 50 L42 58" stroke="#475569" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

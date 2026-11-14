@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--
+  The page of the Kazo Deck iframe (doc/en/plan.md, decision 5). DeckCraft runs here, in page host
+  mode (data-host="page", craft-web-host). craft-proxy.js, served by Kazo OS with the
+  Kazo.Os.AppSdk.Craft module (ADR 0259), reads data-craft-app and data-craft-build, starts
+  DeckCraft from ../deckcraft/deckcraft.json and relays its canvas events to the window through the
+  MessagePort the window hands over. DeckCraft installs window.deckcraft, the command API the proxy
+  uses, in every mode: no "control" parameter, unlike Kazo Fig and Kazo Photo.
+
+  DeckCraft removes deckcraft_loading once it runs, or writes its start error into it; in host mode
+  it also tells the window (deckcraft:failed), which shows its own error screen with "Retry".
+  No inline script or style.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Kazo Deck</title>
+  <link rel="stylesheet" href="../../Kazo.Os.AppSdk.Craft/craft-page.css">
+  <script type="module" src="../../Kazo.Os.AppSdk.Craft/craft-proxy.js"></script>
+</head>
+<body>
+  <canvas id="deckcraft_canvas" data-host="page"
+          data-craft-app="deckcraft" data-craft-build="../deckcraft/deckcraft.json"></canvas>
+  <div id="deckcraft_loading" data-craft-loading aria-hidden="true"></div>
+</body>
+</html>
