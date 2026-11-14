@@ -274,8 +274,8 @@ branche `kazo/v0.18.1`. Benoit fusionne `deck/base` dans `main`.
   - Exports à plusieurs fichiers (`CopySeries`) : « Exporter › toutes les diapositives en
     images » envoie `<titre>1.png`, `<titre>2.png`… à la suite. Le premier fichier demande où
     aller, les suivants le suivent dans le même dossier sous les noms de DeckCraft (pendant
-    5 s après la copie précédente) ; un fichier qui existe déjà redemande. Forme retenue en
-    attendant la réponse de Benoit (question posée dans le fil).
+    5 s après la copie précédente) ; un fichier qui existe déjà redemande. Forme choisie par
+    Benoit le 2026-11-14 (plutôt qu'un dialogue par image ou un dossier choisi une fois).
   - Garde de fermeture (décision 9) : Oui / Non / Annuler ; Oui enregistre chaque présentation
     modifiée l'une après l'autre (`window.next { index }` puis `file.save`), en attendant
     chaque écriture ; un dialogue annulé garde la fenêtre ouverte.

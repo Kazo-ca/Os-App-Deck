@@ -268,8 +268,8 @@ receives the `kazo/v0.18.1` branch. Benoit merges `deck/base` into `main`.
   - Exports of several files (`CopySeries`): "Export › every slide as pictures" sends
     `<title>1.png`, `<title>2.png`… one after the other. The first file asks where to go, the
     next ones follow it into the same folder under DeckCraft's names (within 5 s of the previous
-    copy); a file that already exists asks again. Form chosen while waiting for Benoit's answer
-    (question asked in the thread).
+    copy); a file that already exists asks again. Form chosen by Benoit on 2026-11-14 (rather
+    than one dialog per picture or a folder chosen once).
   - Close guard (decision 9): Yes / No / Cancel; Yes saves each modified presentation in turn
     (`window.next { index }` then `file.save`), waiting for each write; a cancelled dialog keeps
     the window open.
