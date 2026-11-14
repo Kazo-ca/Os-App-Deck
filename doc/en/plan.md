@@ -113,13 +113,13 @@ and the upstream guide, not played).
 | 10 | Theme and language | `ui.set { dark }` at `ready` and at each change of the OS theme. No language to send: DeckCraft is in English (limit noted in the listing). |
 | 11 | Settings | Nothing to keep per user: no `WebStorageFile` as long as DeckCraft stores nothing. |
 | 12 | Shortcuts | `ReservedKeys.Os`, with `Ctrl+N` according to Q1. `F5`, `Shift+F5` and `Escape` go to DeckCraft (slide show). Conflicts between the OS chords and DeckCraft's are listed in work item 3 and noted in the listing. |
-| 13 | Associations | Default app (`open` and `edit`) for `.pptx .ppsx .potx .deckcraft`: nothing else opens them in Kazo OS. "Open with" only for `.txt .md .rtf` (DeckCraft turns them into a presentation outline; the text editor stays their default app). Not asked as a question: say no if it is not wanted. |
+| 13 | Associations | Default app (`open` and `edit`) for `.pptx .ppsx .potx .deckcraft`: nothing else opens them in Kazo OS. "Open with" only for `.txt .md .rtf` (DeckCraft turns them into a presentation outline; the text editor stays their default app). Accepted by Benoit on 2026-11-14. |
 | 14 | Upstream track | Drafts in English, with no agent mention, in `/mnt/project-files/deck/upstream/`; Benoit publishes them. |
 | 15 | Kazo OS ADR | None planned with the recommended answers. If an answer needs one (Q2 = C), next free number **0271 or later**, to be checked again on `main`, the open PRs and every `*/base` branch when writing it. |
 
 ## Questions asked to Benoit
 
-Asked in the thread on 2026-11-14. The answers will be noted here.
+Asked in the thread on 2026-11-14. **Benoit answered A to the three questions on 2026-11-14**, and accepted the associations of decision 13: one presentation per window (Q1), real browser full screen for the slide show (Q2), presenter view off in the first version with a `TODO` issue for later (Q3).
 
 **Q1. How many presentations per window?** DeckCraft can hold several presentations in one
 instance, but without tabs: the second one is hidden behind Window › Next Window, and the Kazo OS
@@ -259,7 +259,7 @@ reach); Benoit looks before publishing.
 
 - [x] Step 0: reading of DeckCraft 0.18.1 and trial of the official web build in host mode.
 - [x] Plan in fr and en.
-- [ ] Benoit's answers to Q1, Q2 and Q3.
+- [x] Benoit's answers to Q1, Q2 and Q3: A everywhere (2026-11-14).
 - [ ] Work item 2: solution, manifest, build from the fork, iframe page, window.
 - [ ] Work item 3: window, opening, saving, copies, close guard.
 - [ ] Work item 4: slide show.

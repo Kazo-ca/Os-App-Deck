@@ -115,13 +115,13 @@ les pages de DeckCraft (lus dans le code et le guide amont, pas joués).
 | 10 | Thème et langue | `ui.set { dark }` à `ready` et à chaque changement de thème de l'OS. Pas de langue à envoyer : DeckCraft est en anglais (limite notée dans la fiche). |
 | 11 | Réglages | Rien à garder par utilisateur : pas de `WebStorageFile` tant que DeckCraft ne stocke rien. |
 | 12 | Raccourcis | `ReservedKeys.Os`, avec `Ctrl+N` selon Q1. `F5`, `Maj+F5` et `Échap` vont à DeckCraft (diaporama). Les conflits entre les accords de l'OS et ceux de DeckCraft sont relevés au chantier 3 et notés dans la fiche. |
-| 13 | Associations | App par défaut (`open` et `edit`) pour `.pptx .ppsx .potx .deckcraft` : rien d'autre ne les ouvre dans Kazo OS. « Ouvrir avec » seulement pour `.txt .md .rtf` (DeckCraft en fait un plan de présentation ; l'éditeur de texte reste leur app par défaut). Pas mise en question : dire non si ce n'est pas voulu. |
+| 13 | Associations | App par défaut (`open` et `edit`) pour `.pptx .ppsx .potx .deckcraft` : rien d'autre ne les ouvre dans Kazo OS. « Ouvrir avec » seulement pour `.txt .md .rtf` (DeckCraft en fait un plan de présentation ; l'éditeur de texte reste leur app par défaut). Acceptée par Benoit le 2026-11-14. |
 | 14 | Piste amont | Brouillons en anglais, sans mention d'agent, dans `/mnt/project-files/deck/upstream/` ; Benoit les publie. |
 | 15 | ADR de Kazo OS | Aucune prévue avec les réponses recommandées. Si une réponse en demande une (Q2 = C), prochain numéro libre **0271 ou suivant**, à revérifier sur `main`, les PR ouvertes et toutes les branches `*/base` au moment de l'écrire. |
 
 ## Questions posées à Benoit
 
-Posées dans le fil le 2026-11-14. Les réponses seront notées ici.
+Posées dans le fil le 2026-11-14. **Benoit a répondu A aux trois questions le 2026-11-14**, et a accepté les associations de la décision 13 : une présentation par fenêtre (Q1), vrai plein écran du navigateur pour le diaporama (Q2), mode présentateur coupé dans la première version avec une issue `TODO` pour la suite (Q3).
 
 **Q1. Combien de présentations par fenêtre ?** DeckCraft peut tenir plusieurs présentations
 dans une instance, mais sans onglets : la deuxième est cachée derrière Fenêtre › Fenêtre
@@ -264,7 +264,7 @@ la session) ; Benoit regarde avant de publier.
 
 - [x] Étape 0 : lecture de DeckCraft 0.18.1 et essai du build web officiel en mode hébergé.
 - [x] Plan fr et en.
-- [ ] Réponses de Benoit à Q1, Q2 et Q3.
+- [x] Réponses de Benoit à Q1, Q2 et Q3 : A partout (2026-11-14).
 - [ ] Chantier 2 : solution, manifeste, compilation depuis le fork, page d'iframe, fenêtre.
 - [ ] Chantier 3 : fenêtre, ouverture, enregistrement, copies, garde de fermeture.
 - [ ] Chantier 4 : diaporama.
