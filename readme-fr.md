@@ -4,6 +4,8 @@
 
 Un dépôt d'app Kazo OS, créé avec le modèle `kazoos-solution`.
 
+Ce dépôt accueillera **Kazo Deck**, l'app de présentations de Kazo OS (un portage de DeckCraft). Le plan est dans [`doc/fr/plan.md`](doc/fr/plan.md) ([index de la documentation](doc/fr/README.md)).
+
 | Dossier | Contenu |
 | --- | --- |
 | `src/Kazo.Os.App` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
