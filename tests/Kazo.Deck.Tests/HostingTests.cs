@@ -88,4 +88,13 @@ public sealed class HostingTests
 
         return directory?.FullName ?? throw new InvalidOperationException("Kazo.Deck.slnx not found above the test binaries.");
     }
+
+    [Fact]
+    public void The_presenter_view_is_turned_off()
+    {
+        // Q3 = A: off in the first version (TODO Kazo-ca/Os-App-Deck#4).
+        // A command goes through engine.execute: "show.presenter" alone is an unknown control method.
+        Assert.Equal("engine.execute", DeckCraftShow.ExecuteMethod);
+        Assert.Equal("""{"command":"show.presenter","params":{"on":false}}""", System.Text.Json.JsonSerializer.Serialize(DeckCraftShow.PresenterOff));
+    }
 }

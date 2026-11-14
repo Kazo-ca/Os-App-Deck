@@ -9,6 +9,10 @@
 
   DeckCraft removes deckcraft_loading once it runs, or writes its start error into it; in host mode
   it also tells the window (deckcraft:failed), which shows its own error screen with "Retry".
+
+  slide-show.js (work item 4) puts the slide show in the browser's full screen and ends the show when
+  full screen ends; it also keeps DeckCraft's presenter popup from opening (Q3 = A), and
+  deck-page.css hides the button DeckCraft would show to retry that popup.
   No inline script or style.
 -->
 <html lang="en">
@@ -17,7 +21,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>Kazo Deck</title>
   <link rel="stylesheet" href="../../Kazo.Os.AppSdk.Craft/craft-page.css">
+  <link rel="stylesheet" href="deck-page.css">
   <script type="module" src="../../Kazo.Os.AppSdk.Craft/craft-proxy.js"></script>
+  <script type="module" src="slide-show.js"></script>
 </head>
 <body>
   <canvas id="deckcraft_canvas" data-host="page"

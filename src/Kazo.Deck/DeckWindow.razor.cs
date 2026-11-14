@@ -17,12 +17,12 @@ namespace Kazo.Deck;
 /// <remarks>
 /// "Ready" is DeckCraft's <c>deckcraft:ready</c> event (its host mode, <c>craft-web-host</c>). Once
 /// DeckCraft is ready the window gives it the OS theme (decision 10; there is no language to give,
-/// DeckCraft is in English only), then opens the file it was started for. Opening, saving, copies,
-/// the binding of presentations to their files and the close guard are in
-/// <c>DeckWindow.Documents.cs</c> (work item 3); the file pickers, the chords and the theme in
-/// <c>DeckWindow.Proxy.cs</c>. The slide show in full screen and the presenter view come with work
-/// item 4. The launch argument <c>--webgl</c> forces DeckCraft's WebGL 2 renderer, to try it
-/// without WebGPU.
+/// DeckCraft is in English only), turns the presenter view off (Q3 = A), then opens the file it
+/// was started for. Opening, saving, copies, the binding of presentations to their files and the
+/// close guard are in <c>DeckWindow.Documents.cs</c> (work item 3); the file pickers, the chords and
+/// the theme in <c>DeckWindow.Proxy.cs</c>. The slide show in full screen is done by the iframe
+/// page (<c>wwwroot/host/slide-show.js</c>, work item 4). The launch argument <c>--webgl</c>
+/// forces DeckCraft's WebGL 2 renderer, to try it without WebGPU.
 /// </remarks>
 public sealed partial class DeckWindow : IAsyncDisposable
 {
@@ -156,6 +156,12 @@ public sealed partial class DeckWindow : IAsyncDisposable
         }
 
         await OnSchemeChangedAsync(await frame.GetColorSchemeAsync());
+
+        // Presenter view off in the first version (Q3 = A, TODO Kazo-ca/Os-App-Deck#4): DeckCraft
+        // turns it on by default and would open a browser popup outside Kazo OS, which also costs
+        // the slide show its full screen. The page's slide-show.js refuses that popup and turns the
+        // view off again if the Slide Show tab turns it on.
+        await frame.RequestAsync(DeckCraftShow.ExecuteMethod, DeckCraftShow.PresenterOff, cancellationToken: AppContext.CancellationToken);
 
         // DeckCraft starts on an empty presentation ("Presentation1"); the file the window was
         // started for takes its place.
