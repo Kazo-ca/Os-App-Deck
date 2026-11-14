@@ -22,6 +22,29 @@ public sealed partial class HostPageTests
     }
 
     [Fact]
+    public void The_page_loads_its_slide_show_script_and_style()
+    {
+        // Work item 4: full screen for the slide show, presenter popup refused (Q2 = A, Q3 = A).
+        Assert.Contains("""<script type="module" src="slide-show.js"></script>""", Page);
+        Assert.Contains("""<link rel="stylesheet" href="deck-page.css">""", Page);
+        Assert.True(Page.IndexOf("href=\"../../Kazo.Os.AppSdk.Craft/craft-page.css\"", StringComparison.Ordinal) < Page.IndexOf("href=\"deck-page.css\"", StringComparison.Ordinal),
+            "the app's rules come after the module's");
+        Assert.True(File.Exists(Path.Combine(App, "wwwroot", "host", "slide-show.js")));
+        Assert.True(File.Exists(Path.Combine(App, "wwwroot", "host", "deck-page.css")));
+    }
+
+    [Fact]
+    public void The_slide_show_script_refuses_only_the_presenter_popup()
+    {
+        string script = File.ReadAllText(Path.Combine(App, "wwwroot", "host", "slide-show.js"));
+
+        // DeckCraft's popup address (apps/deckcraft-web/src/presenter.rs); other links still open.
+        Assert.Contains("\"#deckcraft-presenter=\"", script, StringComparison.Ordinal);
+        Assert.Contains("show.end", script, StringComparison.Ordinal);
+        Assert.Contains("requestFullscreen", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void The_page_asks_for_no_control_parameter()
     {
         // DeckCraft installs window.deckcraft in every mode (decision 5): nothing to add to the page.

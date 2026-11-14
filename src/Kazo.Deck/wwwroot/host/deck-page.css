@@ -1,0 +1,14 @@
+/*
+ * Kazo Deck's own rules for its iframe page, after the module's craft-page.css (doc/en/plan.md,
+ * work item 4).
+ *
+ * Presenter view is off in the first version (Q3 = A, TODO Kazo-ca/Os-App-Deck#4): the window turns
+ * it off and slide-show.js refuses its popup. If a show still starts with it on (the Slide Show tab's
+ * toggle, then F5 within the same instant), DeckCraft puts an "Open presenter window" button on the
+ * page body, over the slides (apps/deckcraft-web/src/presenter.rs); it could only open the refused
+ * popup, so it is not shown. DeckCraft draws everything else in its canvas: no other button sits
+ * directly in the body.
+ */
+body > button {
+    display: none !important;
+}

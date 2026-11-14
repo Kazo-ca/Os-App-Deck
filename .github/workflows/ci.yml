@@ -48,3 +48,7 @@ jobs:
 
       - name: Test
         run: dotnet test -c Release --no-build
+
+      # The iframe page's slide-show script (work item 4), on a fake page: Node only, no browser.
+      - name: Test the page scripts
+        run: node --test tests/unit/*.test.mjs
