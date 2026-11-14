@@ -1,6 +1,6 @@
 > [English version](README.md)
 
-# Kazo.Os.App
+# Kazo Deck
 
 Un dépôt d'app Kazo OS, créé avec le modèle `kazoos-solution`.
 
@@ -8,10 +8,13 @@ Ce dépôt accueillera **Kazo Deck**, l'app de présentations de Kazo OS (un por
 
 | Dossier | Contenu |
 | --- | --- |
-| `src/Kazo.Os.App` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
-| `src/Kazo.Os.App.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
-| `tests/Kazo.Os.App.Tests` | Les tests de l'app |
+| `src/Kazo.Deck` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
+| `src/Kazo.Deck.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
+| `tests/Kazo.Deck.Tests` | Les tests de l'app |
 | `external/KazoOs` | Le dépôt Kazo OS en sous-module git, sur un tag de release |
+| `external/deckcraft` | Les sources de DeckCraft : notre fork `Kazo-ca/deckcraft`, branche `kazo/v0.18.1` (l'étiquette amont `v0.18.1`, sans changement) |
+| `src/Kazo.Deck/wwwroot/deckcraft/` | Le build web de DeckCraft compilé depuis ce sous-module, avec sa provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
+| `tests/e2e/` | Les parcours Playwright dans l'hôte Kazo OS (`npm run test:e2e`) |
 | `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, `store.json` |
 
 ## Premiers pas
@@ -26,8 +29,8 @@ git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/KazoOs
 git -C external/KazoOs checkout v<version de Kazo OS>
 ```
 
-Ouvrez ensuite le `.sln` dans Visual Studio ou Rider et démarrez `Kazo.Os.App.Os`,
-ou lancez `dotnet run --project src/Kazo.Os.App.Os`.
+Ouvrez ensuite le `Kazo.Deck.slnx` dans Visual Studio ou Rider et démarrez `Kazo.Deck.Os`,
+ou lancez `dotnet run --project src/Kazo.Deck.Os`.
 
 ## La version de Kazo OS
 

@@ -197,6 +197,41 @@ receives the `kazo/v0.18.1` branch. Benoit merges `deck/base` into `main`.
 - **Done when**: the app starts in WebGPU and in WebGL 2, two windows run together, the
   `.kazoapp` installs in the released Kazo OS 3.3.4; `.wasm` size compared with the official zip,
   package size and memory per window noted here.
+- **Done on 2026-11-14** (PR to `deck/base`). Fork: branch `kazo/v0.18.1` of
+  `Kazo-ca/deckcraft` on `7cc73ab1`, nothing else changed; submodule `external/deckcraft` on it,
+  submodule `external/KazoOs` on `v3.3.4`. Built by `tools/build-deckcraft.sh` (rustc 1.97.0,
+  Trunk 0.21.14, `craft-fonts` `37827ad`, `CRAFT_FONTS_REQUIRED`), DeckCraft's own
+  `packaging/web/package.sh` as it is. Checked:
+  - `dotnet build -c Release` and `dotnet test -c Release`: 39 tests green (including "the commit of
+    `deckcraft.json` is the submodule's" and the size and SHA-256 of every file).
+  - `npm run test:e2e` (host `Kazo.Deck.Os` in Release, Chromium without a graphics card): 3 runs
+    green: the iframe page with no `control` parameter; DeckCraft on WebGL 2 (`--webgl`), window
+    shown at `ready`, no screen left, the OS dark theme received through `ui.set { dark }`, one
+    empty presentation; two windows together, each with its own instance (a slide added in one
+    does not change the other).
+  - `npm run test:installed` (`tests/installed/install-and-start.mjs`, new): the `.kazoapp`
+    installs with `sudo kazopkg install` in the **published Kazo OS 3.3.4**
+    (`kazoos-wasm-3.3.4.zip`), DeckCraft shows in 4.9 s in the first window (download and compile,
+    local server), 1.3 s in the second; with no flag, DeckCraft fell back to WebGL 2 by itself (no
+    WebGPU in that Chromium).
+  - **Not checked**: **WebGPU** rendering (Chromium's software WebGPU loses its device without a
+    graphics card, as for Kazo Fig and Kazo Photo); to try on a machine with a GPU.
+  - Debug builds (`KazoOsUseSource=true`) do not compile in this container (.NET SDK 10.0.115,
+    Razor errors in the submodule's `Kazo.Os.Apps.Browser`); CI and the Store use the Release
+    profile, which is green.
+
+  | Measure | Value |
+  | --- | --- |
+  | Compiled `.wasm` | **38,745,366 bytes** (36.9 MiB; gzip -9: 15,254,992) |
+  | Official zip's `.wasm` | 33,159,566 bytes (31.6 MiB; gzip -9: 11,840,503) |
+  | Difference | **+5,585,800 bytes (+16.8%)**: the `craft-fonts` fonts. Inter regular and bold (832,068 bytes) and BIZ UDPGothic (4,669,688 bytes) make 5.50 MB; the difference is the size of these fonts and the official zip has no OFL licence: the upstream release seems built without `CRAFT_FONTS_DIR` (inferred, not checked in its logs). Ours has the fonts the release promises. |
+  | Package `ca.kazo.deck-0.1.0.kazoapp` | 15,373,139 bytes (14.7 MiB); 37.3 MiB unpacked, 43 files |
+  | Memory per window | Chromium's renderer process (`ps`, software rendering): +347 MiB for the first window, +46 MiB for the second; the GPU process is not counted. A rough measure, to redo on a machine with a GPU. |
+
+  Notes for what follows: `package.sh` copies the OFL licence of **every** `craft-fonts` family (30
+  `OFL-*.txt` files) while the web build embeds two; they stay in `wwwroot/deckcraft/` (nothing
+  wrong, a few KB too many), and work item 5 takes it into account in `THIRD-PARTY-NOTICES`.
+  `Ctrl+N` (a new window, Q1 = A) is not reserved yet: it comes with work item 3's window.
 
 ### 3. Window (`deck/3-window`)
 
@@ -260,7 +295,7 @@ reach); Benoit looks before publishing.
 - [x] Step 0: reading of DeckCraft 0.18.1 and trial of the official web build in host mode.
 - [x] Plan in fr and en.
 - [x] Benoit's answers to Q1, Q2 and Q3: A everywhere (2026-11-14).
-- [ ] Work item 2: solution, manifest, build from the fork, iframe page, window.
+- [x] Work item 2: solution, manifest, build from the fork, iframe page, window (2026-11-14).
 - [ ] Work item 3: window, opening, saving, copies, close guard.
 - [ ] Work item 4: slide show.
 - [ ] Work item 5: Store.

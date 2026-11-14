@@ -1,6 +1,6 @@
 > [Version française](readme-fr.md)
 
-# Kazo.Os.App
+# Kazo Deck
 
 A Kazo OS app repository, made with the `kazoos-solution` template.
 
@@ -8,10 +8,13 @@ This repository will hold **Kazo Deck**, the presentation app of Kazo OS (a port
 
 | Folder | Content |
 | --- | --- |
-| `src/Kazo.Os.App` | The app (window app, its `[AppManifest]` class generates `manifest.json`) |
-| `src/Kazo.Os.App.Os` | A host that runs the whole Kazo OS with the base apps and this app: the project to start |
-| `tests/Kazo.Os.App.Tests` | Tests of the app |
+| `src/Kazo.Deck` | The app (window app, its `[AppManifest]` class generates `manifest.json`) |
+| `src/Kazo.Deck.Os` | A host that runs the whole Kazo OS with the base apps and this app: the project to start |
+| `tests/Kazo.Deck.Tests` | Tests of the app |
 | `external/KazoOs` | The Kazo OS repository as a git submodule, on a release tag |
+| `external/deckcraft` | DeckCraft's sources: our fork `Kazo-ca/deckcraft`, branch `kazo/v0.18.1` (the upstream tag `v0.18.1`, unchanged) |
+| `src/Kazo.Deck/wwwroot/deckcraft/` | The DeckCraft web build compiled from that submodule, with its provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
+| `tests/e2e/` | Playwright runs in the Kazo OS host (`npm run test:e2e`) |
 | `store/` | What the Kazo OS Store shows: icon (PNG 256×256), short descriptions, descriptions, `store.json` |
 
 ## First steps
@@ -26,8 +29,8 @@ git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/KazoOs
 git -C external/KazoOs checkout v<Kazo OS version>
 ```
 
-Then open the `.sln` in Visual Studio or Rider and start `Kazo.Os.App.Os`, or run
-`dotnet run --project src/Kazo.Os.App.Os`.
+Then open the `Kazo.Deck.slnx` in Visual Studio or Rider and start `Kazo.Deck.Os`, or run
+`dotnet run --project src/Kazo.Deck.Os`.
 
 ## The Kazo OS version
 
