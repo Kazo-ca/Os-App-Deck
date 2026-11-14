@@ -1,23 +1,110 @@
 > [Version française](readme-fr.md)
 
+<!-- Store listing: generated from store/ by .github/scripts/store-readme.mjs. Edit store/, then run it. -->
+
+<img src="store/icon.png" alt="" width="96" align="right">
+
 # Kazo Deck
 
-A Kazo OS app repository, made with the `kazoos-solution` template.
+A presentation editor for Kazo OS. Kazo Deck is based on
+[DeckCraft](https://github.com/storytold/deckcraft) by the ArtCraft team, an open-source
+presentation editor written in Rust, running here in a Kazo OS window.
 
-This repository will hold **Kazo Deck**, the presentation app of Kazo OS (a port of DeckCraft). The plan is in [`doc/en/plan.md`](doc/en/plan.md) ([documentation index](doc/en/README.md)).
+## Make presentations
+
+- Slide masters and layouts, themes with colour and font schemes, sections, comments, notes,
+  headers and footers, any slide size.
+- Over 150 shapes with adjust handles, connectors, freeform drawing, merge shapes, gradients,
+  shadows, glow and reflections.
+- Formatted text on the slide: fonts, paragraphs, bullets and numbering, columns, autofit, links.
+- Pictures, tables, charts, icons, audio and video.
+- Transitions (Morph included), entrance, emphasis and exit animations, and motion paths.
+- Starter templates to begin a presentation in seconds.
+
+## Present
+
+- F5 starts the slide show from the beginning, Shift+F5 from the current slide, and so does the
+  "Present" button: the presentation goes full screen in the browser. Esc, or the end of the last
+  slide, brings you back to the window.
+- If the browser refuses full screen, the slide show fills the window.
+
+## Your Kazo OS files
+
+- Double-click a `.pptx`, `.ppsx`, `.potx` or `.deckcraft` file in the File Explorer: it opens in
+  Kazo Deck. `.txt`, `.md` and `.rtf` files offer it under "Open with" (an outline becomes slides).
+- One presentation per window: opening another file, or Ctrl+N, opens a new window.
+- Save writes back to the open file, in its format. Save As, and the first save of a new
+  presentation, go through the Kazo OS save dialog.
+- Export (PowerPoint, PDF, pictures, animated GIF, outline) goes through the Kazo OS "Save a copy"
+  dialog: the presentation stays bound to its file. The pictures of every slide go to the folder
+  chosen for the first one. Nothing ends up in the browser's downloads.
+- Closing the window asks before losing changes.
+- Kazo Deck follows the Kazo OS light or dark theme.
+
+## Known limits
+
+- **DeckCraft is in alpha.** Most presentations open and save well, but keep a copy of the ones
+  that matter.
+- DeckCraft's interface is in English.
+- Kazo OS opens files up to 128 MiB.
+- DeckCraft in the browser embeds two fonts only: Inter and BIZ UDPGothic (Japanese). A
+  presentation written with another font (Calibri, Arial, Lato…) shows in Inter, and its layout may
+  move a little; the file keeps its fonts. Chinese, Korean, Arabic, Hebrew or Thai text may show as
+  boxes.
+- The presenter view (notes and next slide on another screen) is off for now.
+- The window stays on the screen it opened on: moving it to another screen would reload DeckCraft
+  and lose the open presentation.
+- DeckCraft draws with WebGPU or WebGL 2: a browser or computer with neither shows an error screen
+  instead of the slides.
+- The download is about 15 MB (about 40 MB once installed), and each window loads its own copy of
+  DeckCraft.
+- Requires Kazo OS 3.3.4 or later.
+
+## License
+
+Kazo Deck is free software under the MIT license. DeckCraft is under the MIT or Apache-2.0 license;
+its notices, the licenses of the material it carries and those of the fonts (SIL Open Font License
+1.1) ship with the app (see `THIRD-PARTY-NOTICES.md` in the repository). The ArtCraft name and
+logos are trademarks of the ArtCraft team and are not used by Kazo Deck.
+
+## Screenshots
+
+<p>
+  <img src="store/screenshots/1.png" alt="Kazo Deck, screenshot 1" height="240">
+  <img src="store/screenshots/2.png" alt="Kazo Deck, screenshot 2" height="240">
+  <img src="store/screenshots/3.png" alt="Kazo Deck, screenshot 3" height="240">
+</p>
+
+<!-- /Store listing -->
+
+## Try it
+
+[Open Kazo Deck in Kazo OS](https://os.kazo.ca/?autolaunch=ca.kazo.deck): the link starts Kazo OS, installs the app from the official Store and opens it.
+
+Or open [Kazo OS](https://os.kazo.ca/) and install Kazo Deck from the **Kazo OS Store** (category Productivity), or in the Kazo OS Terminal, as an administrator: `sudo kazopkg install Kazo-ca/Os-App-Deck`.
+
+## About Kazo OS
+
+[Kazo OS](https://github.com/Kazo-ca/Os) is a simulated operating system that runs in the browser, written in C# with Blazor WebAssembly. It gives a complete environment to build and run applications: desktop and windows, a persistent file system, processes, a POSIX shell, a simulated network, the Kazo OS Store, and a public SDK (NuGet packages) to make apps such as this one. Try it at <https://os.kazo.ca/> (PWA, works offline).
+
+## Development
+
+- Plan: [plan](doc/en/plan.md) ([documentation index](doc/en/README.md)). DeckCraft's notices and the licenses in the package: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 | Folder | Content |
 | --- | --- |
 | `src/Kazo.Deck` | The app (window app, its `[AppManifest]` class generates `manifest.json`) |
 | `src/Kazo.Deck.Os` | A host that runs the whole Kazo OS with the base apps and this app: the project to start |
-| `tests/Kazo.Deck.Tests` | Tests of the app |
+| `tests/Kazo.Deck.Tests` | Tests of the app (xUnit) |
 | `external/KazoOs` | The Kazo OS repository as a git submodule, on a release tag |
 | `external/deckcraft` | DeckCraft's sources: our fork `Kazo-ca/deckcraft`, branch `kazo/v0.18.1` (the upstream tag `v0.18.1`, unchanged) |
 | `src/Kazo.Deck/wwwroot/deckcraft/` | The DeckCraft web build compiled from that submodule, with its provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
 | `tests/e2e/` | Playwright runs in the Kazo OS host (`npm run test:e2e`) |
-| `store/` | What the Kazo OS Store shows: icon (PNG 256×256), short descriptions, descriptions, `store.json` |
+| `store/` | What the Kazo OS Store shows: icon (PNG 256×256), short descriptions, descriptions, screenshots, `store.json`; the top of this README is generated from it (`npm run store:readme`, checked in CI) |
+| `tests/installed/` | The app as the Store installs it, in a published Kazo OS: `kazopkg install` (or the Store with `--store`), a `.pptx` exported, opened by double-click, saved and shown full screen, the Store screenshots (`npm run test:installed`) |
+| `THIRD-PARTY-NOTICES.md` | DeckCraft and what it bundles; linked into the package with `LICENSE` (`wwwroot/legal/`, with the files DeckCraft's NOTICE refers to in `wwwroot/legal/deckcraft/`) |
 
-## First steps
+### First steps
 
 ```bash
 # A repository created from the GitHub template already has the submodule:
@@ -32,7 +119,7 @@ git -C external/KazoOs checkout v<Kazo OS version>
 Then open the `Kazo.Deck.slnx` in Visual Studio or Rider and start `Kazo.Deck.Os`, or run
 `dotnet run --project src/Kazo.Deck.Os`.
 
-## The Kazo OS version
+### The Kazo OS version
 
 `external/KazoOs/wasm2/KazoOs/build/Versions.props` is the Kazo OS version of this repository.
 To move to another version, move the submodule to its tag and commit it:
@@ -46,7 +133,7 @@ git add external/KazoOs
 Never edit the submodule: the OS is not modified from an app repository, and CI refuses a
 submodule with local changes or off its tag.
 
-## Two build profiles
+### Two build profiles
 
 | Profile | Kazo OS comes from | Use |
 | --- | --- | --- |
@@ -55,7 +142,7 @@ submodule with local changes or off its tag.
 
 Force either one with `-p:KazoOsUseSource=true` or `false`.
 
-## Publishing to the Kazo OS Store
+### Publishing to the Kazo OS Store
 
 1. Fill `store/` (icon, short descriptions, descriptions, category and tags in `store.json`).
 2. Change `Version` in the app's `[AppManifest]` class and commit it to `main`, then tag it: run the
@@ -80,7 +167,7 @@ Force either one with `-p:KazoOsUseSource=true` or `false`.
 The catalog never takes a binary from you: once your pull request is reviewed and merged, its CI
 compiles the app at the tagged commit.
 
-## Publishing on the `kazoos-packages` branch
+### Publishing on the `kazoos-packages` branch
 
 The same `v*` tag also runs **Publish the Kazo OS packages**: it packs the app and pushes it to the
 `kazoos-packages` branch of this repository, keeping the versions already published. Kazo OS
