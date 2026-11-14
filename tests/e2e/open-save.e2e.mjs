@@ -145,7 +145,10 @@ test('Save As binds the presentation to a new file; Print and Export write copie
 
     // Export as pictures of every slide: one save per slide. The first one asks, the others
     // follow it into its folder under DeckCraft's names.
-    await runInTerminal(page, `mkdir ${HOME}/Slides`);
+    // The shell runs the command after it is typed: wait for its output (the sum appears only
+    // there, not in the command line) so that the dialog lists the new folder.
+    await runInTerminal(page, `mkdir ${HOME}/Slides && echo slides-$((40+2))`);
+    await page.locator('.xterm-rows').getByText('slides-42', { exact: false }).first().waitFor({ timeout: STEP_TIMEOUT_MS });
     await frame.evaluate(() => window.deckcraft.request('ui.dialog.open', { id: 'export', fields: { fmt: 'pngAll' } }));
     await frame.locator('#deckcraft_canvas').focus();
     await page.keyboard.press('Enter');
