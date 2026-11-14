@@ -4,6 +4,8 @@
 
 A Kazo OS app repository, made with the `kazoos-solution` template.
 
+This repository will hold **Kazo Deck**, the presentation app of Kazo OS (a port of DeckCraft). The plan is in [`doc/en/plan.md`](doc/en/plan.md) ([documentation index](doc/en/README.md)).
+
 | Folder | Content |
 | --- | --- |
 | `src/Kazo.Os.App` | The app (window app, its `[AppManifest]` class generates `manifest.json`) |
