@@ -2,6 +2,11 @@
   "appId": "ca.kazo.deck",
   "versions": [
     {
+      "version": "0.1.1",
+      "path": "0.1.1/ca.kazo.deck-0.1.1.kazoapp",
+      "sha256": "9c40b94d07773fb0df41b878b7df6e5a52d73ed042dbfe571a61ffe423639daf"
+    },
+    {
       "version": "0.1.1-beta.1",
       "path": "0.1.1-beta.1/ca.kazo.deck-0.1.1-beta.1.kazoapp",
       "sha256": "74c1c92a54c6d9e35b99b513385f41245a5cdc1e143572b429ca503fa9c241a9"
