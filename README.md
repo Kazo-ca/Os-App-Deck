@@ -58,7 +58,6 @@ presentation editor written in Rust, running here in a Kazo OS window.
   instead of the slides.
 - The download is about 15 MB (about 40 MB once installed), and each window loads its own copy of
   DeckCraft.
-- Requires Kazo OS 3.3.4 or later.
 
 ## License
 

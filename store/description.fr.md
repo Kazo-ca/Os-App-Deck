@@ -56,7 +56,6 @@ présentations libre écrit en Rust, qui tourne ici dans une fenêtre de Kazo OS
   montre un écran d'erreur au lieu des diapositives.
 - Le téléchargement fait environ 15 Mo (environ 40 Mo une fois installé), et chaque fenêtre charge
   sa propre copie de DeckCraft.
-- Demande Kazo OS 3.3.4 ou plus récent.
 
 ## Licence
 
