@@ -371,6 +371,29 @@ receives the `kazo/v0.18.1` branch. Benoit merges `deck/base` into `main`.
   (the org secret `HACK_STORE_TOKEN` now exists), `npm run test:installed -- --store`, the
   `features.md` row in `Kazo-ca/Os`, closing issue #1.
 
+## DeckCraft updates
+
+### 0.19.0 (2026-11-23)
+
+Kazo Deck 0.2.0 ships DeckCraft 0.19.0. Upstream pushed no `v0.19.0` tag: the source is commit
+`930e1694` ("Release: DeckCraft v0.19.0", head of the `release` branch), copied as it is to the
+fork's `kazo/v0.19.0` branch (no Kazo patch). `craft-fonts` stays at `37827ad`, as in the
+upstream release workflow.
+
+- What users see: the "SmartArt" and "WordArt" labels become "Diagram" and "Decorative Text";
+  sturdier `.pptx` opening (missing slides reported and opened as a repaired copy, custom
+  geometry, charts, master text styles, animation timing); "Duplicate" keeps a shape in its
+  group. Video decoders and the WMF/EMF reader now come from `craft-libs`. Host mode
+  (`apps/deckcraft-web`) is unchanged.
+- Build: `tools/build-deckcraft.sh` (rustc 1.100.0, Trunk 0.21.14), 39.2 MB `.wasm` (38.7 MB
+  for 0.18.1). There is no official zip for 0.19.0: `vendor-deckcraft.sh --zip` keeps the 0.18.1
+  reference.
+- Checked: `dotnet test -c Release` 120 tests green; `npm run test:unit` 10 green;
+  `npm run test:e2e` (Release, one suite at a time) 15 green; installed journey in the published
+  Kazo OS 3.5.0 green (kazopkg, two windows, `.pptx` export, double-click, save in place, F5),
+  with the launcher click adapted locally: the script as it is fails on "Launch Terminal" in the
+  3.5.0 launcher, before it reaches Kazo Deck.
+
 ## Upstream track
 
 Drafts in `/mnt/project-files/deck/upstream/deckcraft-web-host.md`, published by Benoit:

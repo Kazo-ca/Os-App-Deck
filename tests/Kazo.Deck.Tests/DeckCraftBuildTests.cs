@@ -30,7 +30,7 @@ public sealed partial class DeckCraftBuildTests
     public void The_build_embeds_the_fonts_of_DeckCraft_s_release()
     {
         // tools/build-deckcraft.sh builds with CRAFT_FONTS_REQUIRED on craft-fonts at the revision
-        // of DeckCraft 0.18.1's release workflow (decision 4); without it the web build has only
+        // of DeckCraft's release workflow (unchanged from 0.18.1 to 0.19.0) (decision 4); without it the web build has only
         // egui's fonts.
         string? fonts = Provenance.GetProperty("source").GetProperty("craftFonts").GetString();
         Assert.Equal("37827adc41fd165f9a9234ac40f94dbad353aa69", fonts);

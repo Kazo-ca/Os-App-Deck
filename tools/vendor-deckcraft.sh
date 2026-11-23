@@ -18,6 +18,9 @@
 set -euo pipefail
 
 # The pinned release. Moving to another version changes these three lines, in a PR.
+# Only the zip mode reads them (--dir takes the version from the submodule). The app ships 0.19.0
+# built from the fork with --dir; upstream published no tag and no web zip for 0.19.0, so the
+# reference zip stays the 0.18.1 one until upstream tags a release with a zip.
 version="0.18.1"
 zip_url="https://github.com/storytold/deckcraft/releases/download/v${version}/deckcraft-web-${version}.zip"
 zip_sha256="3196e537fcfab538aaa2e88584bc74e29bb584459b916ab584ac22fbafe32db5"

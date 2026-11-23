@@ -15,7 +15,7 @@ fonts it embeds.
 | | |
 | --- | --- |
 | Work | [DeckCraft](https://github.com/storytold/deckcraft), a presentation editor written in Rust, by the ArtCraft team and the DeckCraft contributors |
-| Version | 0.18.1, compiled from our fork [`Kazo-ca/deckcraft`](https://github.com/Kazo-ca/deckcraft) (branch `kazo/v0.18.1`, commit `7cc73ab1895ed2e30c8afbcada20c70b9ea0a440`: the upstream tag `v0.18.1`, unchanged) |
+| Version | 0.19.0, compiled from our fork [`Kazo-ca/deckcraft`](https://github.com/Kazo-ca/deckcraft) (branch `kazo/v0.19.0`, commit `930e1694b2d39ce57cc807ebff572af0e622f618`: the upstream "Release: DeckCraft v0.19.0" commit of the `release` branch, untagged upstream, unchanged) |
 | Fonts | embedded at build time from [`storytold/craft-fonts`](https://github.com/storytold/craft-fonts) at commit `37827adc41fd165f9a9234ac40f94dbad353aa69`, as DeckCraft's own releases do |
 | License | MIT or Apache-2.0, at the user's option |
 | Files | `src/Kazo.Deck/wwwroot/deckcraft/` (the web build: `.js`, `.wasm`, `snippets/`) |

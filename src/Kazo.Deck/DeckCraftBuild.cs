@@ -11,7 +11,7 @@ public static class DeckCraftBuild
     /// The DeckCraft version of the build. Kept equal to the <c>version</c> of
     /// <c>wwwroot/deckcraft/deckcraft.json</c> by a test.
     /// </summary>
-    public const string Version = "0.18.1";
+    public const string Version = "0.19.0";
 
     /// <summary>Folder of the build under the app's static files (<c>_content/Kazo.Deck/</c>).</summary>
     public const string Folder = "deckcraft";
