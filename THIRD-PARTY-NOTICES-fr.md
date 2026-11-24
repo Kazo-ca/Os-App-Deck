@@ -15,7 +15,7 @@ polices qu'il intègre.
 | | |
 | --- | --- |
 | Œuvre | [DeckCraft](https://github.com/storytold/deckcraft), un éditeur de présentations écrit en Rust, de l'équipe ArtCraft et des contributeurs de DeckCraft |
-| Version | 0.18.1, compilée depuis notre fork [`Kazo-ca/deckcraft`](https://github.com/Kazo-ca/deckcraft) (branche `kazo/v0.18.1`, commit `7cc73ab1895ed2e30c8afbcada20c70b9ea0a440` : l'étiquette amont `v0.18.1`, sans modification) |
+| Version | 0.19.0, compilée depuis notre fork [`Kazo-ca/deckcraft`](https://github.com/Kazo-ca/deckcraft) (branche `kazo/v0.19.0`, commit `930e1694b2d39ce57cc807ebff572af0e622f618` : le commit amont « Release: DeckCraft v0.19.0 » de la branche `release`, sans étiquette en amont, sans modification) |
 | Polices | intégrées à la compilation depuis [`storytold/craft-fonts`](https://github.com/storytold/craft-fonts) au commit `37827adc41fd165f9a9234ac40f94dbad353aa69`, comme le font les versions officielles de DeckCraft |
 | Licence | MIT ou Apache-2.0, au choix de l'utilisateur |
 | Fichiers | `src/Kazo.Deck/wwwroot/deckcraft/` (le build web : `.js`, `.wasm`, `snippets/`) |

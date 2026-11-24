@@ -4,4 +4,4 @@
 
 | Document | Contenu |
 | --- | --- |
-| [`plan.md`](plan.md) | Étape 0 : lecture et essai de DeckCraft, décisions, questions, chantiers de la série `deck/base` |
+| [`plan.md`](plan.md) | Étape 0 : lecture et essai de DeckCraft, décisions, questions, chantiers de la série `deck/base`, mises à jour de DeckCraft |

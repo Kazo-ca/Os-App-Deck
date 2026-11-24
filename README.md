@@ -96,7 +96,7 @@ Or open [Kazo OS](https://os.kazo.ca/) and install Kazo Deck from the **Kazo OS 
 | `src/Kazo.Deck.Os` | A host that runs the whole Kazo OS with the base apps and this app: the project to start |
 | `tests/Kazo.Deck.Tests` | Tests of the app (xUnit) |
 | `external/KazoOs` | The Kazo OS repository as a git submodule, on a release tag |
-| `external/deckcraft` | DeckCraft's sources: our fork `Kazo-ca/deckcraft`, branch `kazo/v0.18.1` (the upstream tag `v0.18.1`, unchanged) |
+| `external/deckcraft` | DeckCraft's sources: our fork `Kazo-ca/deckcraft`, branch `kazo/v0.19.0` (upstream commit `930e1694` "Release: DeckCraft v0.19.0" of the `release` branch, unchanged) |
 | `src/Kazo.Deck/wwwroot/deckcraft/` | The DeckCraft web build compiled from that submodule, with its provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
 | `tests/e2e/` | Playwright runs in the Kazo OS host (`npm run test:e2e`) |
 | `store/` | What the Kazo OS Store shows: icon (PNG 256×256), short descriptions, descriptions, screenshots, `store.json`; the top of this README is generated from it (`npm run store:readme`, checked in CI) |

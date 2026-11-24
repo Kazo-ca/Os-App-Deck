@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Compiles DeckCraft from the external/deckcraft submodule (our fork Kazo-ca/deckcraft, branch
-# kazo/v0.18.1; work item 2 of doc/en/plan.md, decision 4) the way its release workflow builds the web zip, then
+# kazo/v0.19.0; work item 2 of doc/en/plan.md, decision 4) the way its release workflow builds the web zip, then
 # vendors the result in src/Kazo.Deck/wwwroot/deckcraft/ with tools/vendor-deckcraft.sh --dir. The
 # .github/workflows/build-deckcraft.yml workflow runs it; it also runs on a developer machine.
 #
@@ -17,7 +17,7 @@ set -euo pipefail
 # Kazo Fig's build-figcraft.sh.
 trunk_version="0.21.14"
 # The craft-fonts revision of DeckCraft's release workflow (.github/workflows/release.yml of the
-# v0.18.1 commit, craft-fonts-ref).
+# 0.19.0 commit 930e1694, craft-fonts-ref; the same as 0.18.1).
 craft_fonts_ref="37827adc41fd165f9a9234ac40f94dbad353aa69"
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -38,7 +38,7 @@ done
 fonts_dir="$(cd "$fonts_dir" && pwd)"
 # The fonts embedded in the .wasm must be the release's: the provenance records this revision.
 actual_fonts="$(git -C "$fonts_dir" rev-parse HEAD 2>/dev/null)" || fail "$fonts_dir is not a git checkout of craft-fonts"
-[[ "$actual_fonts" == "$craft_fonts_ref" ]] || fail "craft-fonts is at $actual_fonts; DeckCraft 0.18.1's release uses $craft_fonts_ref"
+[[ "$actual_fonts" == "$craft_fonts_ref" ]] || fail "craft-fonts is at $actual_fonts; DeckCraft's release uses $craft_fonts_ref"
 [[ -z "$(git -C "$fonts_dir" status --porcelain)" ]] || fail "$fonts_dir has local changes"
 
 [[ -f "$deckcraft/Cargo.toml" ]] || fail "external/deckcraft is empty. Run: git submodule update --init external/deckcraft"

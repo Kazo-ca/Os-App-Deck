@@ -100,7 +100,7 @@ Ou ouvrez [Kazo OS](https://os.kazo.ca/) et installez Kazo Deck depuis le **Kazo
 | `src/Kazo.Deck.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
 | `tests/Kazo.Deck.Tests` | Les tests de l'app (xUnit) |
 | `external/KazoOs` | Le dépôt Kazo OS en sous-module git, sur un tag de release |
-| `external/deckcraft` | Les sources de DeckCraft : notre fork `Kazo-ca/deckcraft`, branche `kazo/v0.18.1` (l'étiquette amont `v0.18.1`, sans changement) |
+| `external/deckcraft` | Les sources de DeckCraft : notre fork `Kazo-ca/deckcraft`, branche `kazo/v0.19.0` (le commit amont `930e1694` « Release: DeckCraft v0.19.0 » de la branche `release`, sans changement) |
 | `src/Kazo.Deck/wwwroot/deckcraft/` | Le build web de DeckCraft compilé depuis ce sous-module, avec sa provenance `deckcraft.json` (`tools/build-deckcraft.sh`, workflow **Build DeckCraft**) |
 | `tests/e2e/` | Les parcours Playwright dans l'hôte Kazo OS (`npm run test:e2e`) |
 | `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, captures, `store.json` ; le haut de ce README en est généré (`npm run store:readme`, vérifié en CI) |
